@@ -17,18 +17,16 @@ document.addEventListener("DOMContentLoaded", function() {
         };
 
         try {
-            const response = await axios.post('YOUR_BACKEND_API_ENDPOINT_HERE', userData);
+            const response = await axios.post('http://localhost:4000/user/signup', userData);
             
-            // backend sends { success: true } for successful signups
             if (response.data.success) {
                 showAlert('Signup successful!', 'success');
             } else {
                 showAlert('Something went wrong. Please try again.', 'danger');
             }
         } catch (error) {
-            // Handling errors like email already exists or other backend validations
-            if (error.response && error.response.data && error.response.data.message) {
-                showAlert(error.response.data.message, 'danger');
+            if (error.response && error.response.data) {
+                showAlert(error.response.data, 'danger');
             } else {
                 showAlert('Something went wrong. Please try again.', 'danger');
             }

@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 
 const database = require('./util/database');
-
+const userRouter = require('./routes/user');
 
 
 const app = express();
@@ -13,7 +13,7 @@ app.use(bodyParser.json());
 
 
 
-app.use((req, res, next) => res.end('hola amigo'));
+app.use('/user', userRouter);
 
 
 
