@@ -21,8 +21,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 showAlert('Something went wrong. Please try again.', 'danger');
             }
         } catch (error) {
-            if (error.response && error.response.data && error.response.data.message) {
-                showAlert(error.response.data.message, 'danger');
+            if (error.response && error.response.data) {
+                showAlert(error.response.data , 'danger');
             } else {
                 showAlert('Something went wrong. Please try again.', 'danger');
             }
