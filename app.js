@@ -4,6 +4,7 @@ const cors = require('cors');
 
 const database = require('./util/database');
 const userRouter = require('./routes/user');
+const expenseRouter = require('./routes/expense');
 
 
 const app = express();
@@ -14,7 +15,7 @@ app.use(bodyParser.json());
 
 
 app.use('/user', userRouter);
-
+app.use('/expense', expenseRouter);
 
 
 createServer();
