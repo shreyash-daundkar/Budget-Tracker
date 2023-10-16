@@ -15,8 +15,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
         try {
             const response = await axios.post('http://localhost:4000/user/login', loginData);
-            if (response.data.success) {
-                showAlert('Login successful!', 'success');
+            const {success, id} = response.data;
+            if (success) {
+                localStorage.setItem('userId', id);
+                window.location.href = 'expense.html';
+                //showAlert('Login successful!', 'success');
             } else {
                 showAlert('Something went wrong. Please try again.', 'danger');
             }

@@ -11,7 +11,7 @@ exports.verifyUser = async (req, res, next) => {
         else {
             bcrypt.compare(password, users[0].password, (error, result) => {
                 if(error) res.status(400).send('Password is incorrect');
-                else if(result) res.json({success: true});
+                else if(result) res.json({success: true, id: users[0].id});
             });
         }
     } catch(error) {
