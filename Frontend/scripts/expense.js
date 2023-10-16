@@ -7,17 +7,17 @@ const des = document.querySelector('#form-des');
 const list = document.querySelector('#list');
 
 const api = 'http://localhost:4000/expense'
-const query = `?userid=${localStorage.getItem('userid')}`
+const query = `?userId=${localStorage.getItem('userId')}`
 
 
 
 //on refresh
 
-window.addEventListener('DOMContentLoaded', onRefresh);
-async function onRefresh() {
-    const { data } = await axios.get(api + query);
-    data.forEach(x => addExpense(x));
-}
+// window.addEventListener('DOMContentLoaded', onRefresh);
+// async function onRefresh() {
+//     const { data } = await axios.get(api + query);
+//     data.forEach(x => addExpense(x));
+// }
 
 
 
@@ -33,12 +33,16 @@ async function onSubmit(e) {
         category : category.value,
         description : des.value,
     }
-    if(editId) {
-        url = `${api}/edit${query}&expenseId=${editId}`;
-        editId = null;
-    } else url = `${api}/add${query}`;
-    const { data } = await axios.post(url, expense);
-    addExpense(data);
+    try {
+        if(editId) {
+            url = `${api}/edit${query}&expenseId=${editId}`;
+            editId = null;
+        } else url = `${api}/add${query}`;
+        const { data } = await axios.post(url, expense);
+        addExpense(data);
+    } catch(error) {
+        console.log(err);
+    }
     amount.value = '';
     des.value = '';
 }

@@ -17,6 +17,12 @@ app.use(bodyParser.json());
 
 
 
+app.use('/expense', async (req, res, next) => {
+    console.log(req.query.userId)
+    req.user = await User.findByPk(parseInt(req.query.userId));
+    next();
+});
+
 app.use('/user', userRouter);
 app.use('/expense', expenseRouter);
 

@@ -2,7 +2,13 @@ const expense = require('../models/expense');
 
 exports.displayexpense = async (req, res, next) => res.json(await expense.findAll());
 
-exports.addexpense = async (req, res, next) => res.json(await expense.create(req.body));
+exports.addexpense = async (req, res, next) => {
+    try{
+        res.json(await req.user.createExpense(req.body));
+    } catch(error) {
+        console.log(error);
+    }
+}
 
 exports.deleteexpense = async (req, res, next) => {
     const data = await expense.findByPk(req.params.id);
