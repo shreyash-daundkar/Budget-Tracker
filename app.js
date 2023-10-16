@@ -5,6 +5,9 @@ const cors = require('cors');
 const database = require('./util/database');
 const userRouter = require('./routes/user');
 const expenseRouter = require('./routes/expense');
+const User = require('./models/users');
+const Expense = require('./models/expense');
+
 
 
 const app = express();
@@ -16,6 +19,12 @@ app.use(bodyParser.json());
 
 app.use('/user', userRouter);
 app.use('/expense', expenseRouter);
+
+
+
+User.hasMany(Expense);
+Expense.belongsTo(User);
+
 
 
 createServer();
