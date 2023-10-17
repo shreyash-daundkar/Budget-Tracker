@@ -1,6 +1,6 @@
 const expense = require('../models/expense');
 
-exports.displayexpense = async (req, res, next) => res.json(await expense.findAll());
+exports.displayexpense = async (req, res, next) => res.json(await req.user.getExpenses());
 
 exports.addexpense = async (req, res, next) => {
     try{
