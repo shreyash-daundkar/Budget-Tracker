@@ -11,15 +11,15 @@ exports.addexpense = async (req, res, next) => {
 }
 
 exports.deleteexpense = async (req, res, next) => {
-    const data = await expense.findByPk(req.params.id);
+    const data = await expense.findByPk(req.params.id); 
     data.destroy();
 }
 
 exports.editexpense = async (req, res, next) => {
-    const data = await expense.findByPk(req.params.id);
-    data.amount = req.body.amount;
-    data.category = req.body.category;
-    data.description = req.body.description;
-    data.save();
-    res.json(data);
+    const data = await req.user.getExpenses({where: {id : req.query.expenseId}});
+    data[0].amount = req.body.amount;
+    data[0].category = req.body.category;
+    data[0].description = req.body.description;
+    data[0].save();
+    res.json(data[0]);
 }

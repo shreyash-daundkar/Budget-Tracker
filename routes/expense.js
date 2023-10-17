@@ -6,7 +6,7 @@ const router = express.Router();
 router.get('/', expenseController.displayexpense);
 
 router.post('/add', expenseController.addexpense);
-// router.post('/edit', expenseController.editexpense);
+router.post('/edit', expenseController.editexpense);
 // router.post('/delete', expenseController.deleteexpense);
 
 module.exports = router;
