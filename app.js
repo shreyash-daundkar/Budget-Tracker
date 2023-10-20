@@ -19,7 +19,8 @@ app.use(bodyParser.json());
 
 
 app.use('/expense', async (req, res, next) => {
-    const { userId } = decryptData(req.query.token);
+    const token = req.headers['authorization'];
+    const { userId } = decryptData(token);
     req.user = await User.findByPk(userId);
     next();
 });

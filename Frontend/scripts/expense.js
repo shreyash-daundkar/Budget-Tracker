@@ -7,7 +7,8 @@ const des = document.querySelector('#form-des');
 const list = document.querySelector('#list');
 
 const api = 'http://localhost:4000/expense'
-const query = `?token=${localStorage.getItem('token')}`
+const token = localStorage.getItem('token');
+axios.defaults.headers.common['authorization'] = token;
 
 
 
@@ -15,7 +16,7 @@ const query = `?token=${localStorage.getItem('token')}`
 
 window.addEventListener('DOMContentLoaded', onRefresh);
 async function onRefresh() {
-    const { data } = await axios.get(api + query);
+    const { data } = await axios.get(api);
     data.forEach(x => addExpense(x));
 }
 
@@ -35,9 +36,9 @@ async function onSubmit(e) {
     }
     try {
         if(editId) {
-            url = `${api}/edit${query}&expenseId=${editId}`;
+            url = `${api}/edit?expenseId=${editId}`;
             editId = null;
-        } else url = `${api}/add${query}`;
+        } else url = `${api}/add`;
         const { data } = await axios.post(url, expense);
         addExpense(data);
     } catch(error) {
@@ -66,7 +67,7 @@ function listEvent(e) {
 async function dlt(li) {
     const id = li.getAttribute('data-id');
     li.style.display = 'none';
-    await axios.delete(`${api}/delete${query}&expenseId=${id}`);
+    await axios.delete(`${api}/delete?expenseId=${id}`);
 }
 
 
