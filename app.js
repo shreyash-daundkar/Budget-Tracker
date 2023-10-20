@@ -19,7 +19,8 @@ app.use(bodyParser.json());
 
 
 app.use('/expense', async (req, res, next) => {
-    req.user = await User.findByPk(parseInt(req.query.userId));
+    const { userId } = decryptData(req.query.token);
+    req.user = await User.findByPk(userId);
     next();
 });
 
@@ -38,4 +39,8 @@ createServer();
 async function createServer() {
     const res = await database.sync(); 
     app.listen(4000);
+}
+
+function decryptData(token) {
+    return jwt.verify(token, 'secret');
 }

@@ -7,7 +7,7 @@ const des = document.querySelector('#form-des');
 const list = document.querySelector('#list');
 
 const api = 'http://localhost:4000/expense'
-const query = `?userId=${localStorage.getItem('userId')}`
+const query = `?token=${localStorage.getItem('token')}`
 
 
 
