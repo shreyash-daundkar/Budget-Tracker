@@ -1,4 +1,5 @@
-const expense = require('../models/expense');
+const jwt = require('jsonwebtoken');
+const User = require('../models/users');
 
 exports.displayexpense = async (req, res, next) => res.json(await req.user.getExpenses());
 
@@ -22,4 +23,15 @@ exports.editexpense = async (req, res, next) => {
     data[0].description = req.body.description;
     data[0].save();
     res.json(data[0]);
+}
+
+exports.authenticate = async (req, res, next) => {
+    const token = req.headers['authorization'];
+    const { userId } = decryptData(token);
+    req.user = await User.findByPk(userId);
+    next();
+}
+
+function decryptData(token) {
+    return jwt.verify(token, 'secret');
 }
