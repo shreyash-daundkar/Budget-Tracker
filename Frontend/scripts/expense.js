@@ -1,5 +1,6 @@
 // Selecting elements
 
+const premiumBtn = document.querySelector('#premium-btn');
 const form = document.querySelector('#add-form');
 const amount = document.querySelector('#form-amount');
 const category = document.querySelector('#form-category');
@@ -9,6 +10,21 @@ const list = document.querySelector('#list');
 const api = 'http://localhost:4000/expense'
 const token = localStorage.getItem('token');
 axios.defaults.headers.common['authorization'] = token;
+
+
+
+// Go premium
+
+premiumBtn.addEventListener('click', goPremium);
+async function goPremium() {
+    try {
+        const { data } = await axios.get('http://localhost:4000/buyPremium');
+        console.log(data);
+    } catch(error) {
+        console.log(error.message);
+    }
+}
+
 
 
 

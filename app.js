@@ -5,6 +5,7 @@ const cors = require('cors');
 const database = require('./util/database');
 const userRouter = require('./routes/user');
 const expenseRouter = require('./routes/expense');
+const buyPremiumRoute = require('./routes/buyPremium');
 const User = require('./models/users');
 const Expense = require('./models/expense');
 const Order = require('./models/order');
@@ -21,6 +22,7 @@ app.use(bodyParser.json());
 app.use(['/expense', '/buyPremium'], authenticate);
 app.use('/user', userRouter);
 app.use('/expense', expenseRouter);
+app.use('/buyPremium', buyPremiumRoute);
 
 
 
