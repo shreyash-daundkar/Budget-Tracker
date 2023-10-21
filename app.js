@@ -7,6 +7,7 @@ const userRouter = require('./routes/user');
 const expenseRouter = require('./routes/expense');
 const User = require('./models/users');
 const Expense = require('./models/expense');
+const Order = require('./models/order');
 
 
 
@@ -24,6 +25,9 @@ app.use('/expense', expenseRouter);
 
 User.hasMany(Expense);
 Expense.belongsTo(User);
+
+User.hasMany(Order);
+Order.belongsTo(User);
 
 
 
