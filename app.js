@@ -8,6 +8,7 @@ const expenseRouter = require('./routes/expense');
 const User = require('./models/users');
 const Expense = require('./models/expense');
 const Order = require('./models/order');
+const authenticate = require('./controllers/authenticate');
 
 
 
@@ -17,7 +18,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 
-
+app.use(['/expense', '/buyPremium'], authenticate);
 app.use('/user', userRouter);
 app.use('/expense', expenseRouter);
 
