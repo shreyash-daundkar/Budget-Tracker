@@ -13,7 +13,6 @@ document.addEventListener("DOMContentLoaded", function() {
             username,
             email,
             password,
-            expense: 0,
         };
 
         try {

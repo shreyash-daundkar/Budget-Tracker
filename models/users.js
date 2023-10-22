@@ -25,4 +25,8 @@ module.exports = database.define('users', {
         type : Sequelize.DOUBLE,
         allowNull : false,
     },
+    isPremium : {
+        type : Sequelize.BOOLEAN,
+        allowNull : false,
+    }
 })

@@ -21,6 +21,15 @@ exports.createOrder = (req, res, next) => {
     });
 }
 
-exports.updateOrder = (req, res, next) => {
-    console.log(req.body);
+exports.updateOrder = async (req, res, next) => {
+    const {orderId, paymentId} = req.body;
+    const orders = await req.user.getOrders({where: { orderId }});
+    orders[0].paymentId = paymentId ? paymentId : null;
+    orders[0].status = paymentId ? 'SUCCESS' : 'FAILED';
+    orders[0].save();
+    req.user.isPremium = paymentId ? true : false;
+    req.user.save();
+    console.log(orders[0]);
+    console.log(req.user);
+    res.json();
 }
