@@ -16,10 +16,26 @@ axios.defaults.headers.common['authorization'] = token;
 // Go premium
 
 premiumBtn.addEventListener('click', goPremium);
-async function goPremium() {
+async function goPremium(e) {
     try {
-        const { data } = await axios.get('http://localhost:4000/buyPremium');
-        console.log(data);
+        const { data: {key, order} } = await axios.get('http://localhost:4000/buyPremium');
+        const options = {
+            key,
+            order_id: order.id,
+            'handler': async res => {
+                await axios.post('http://localhost:4000/buyPremium', {orderId: order.id, paymentId: res.razorpay_payment_id});
+                alert('You are now Premium member');
+                premiumBtn.style.display = 'none'; 
+            }
+        }
+        const rzp = new Razorpay(options);
+        rzp.open();
+        e.preventDefault();
+        rzp.on('payment.failed', async res => {
+            await axios.post('http://localhost:4000/buyPremium', {orderId: order.id});
+            console.log(res);
+            alert('Payment failed');
+        })
     } catch(error) {
         console.log(error.message);
     }
