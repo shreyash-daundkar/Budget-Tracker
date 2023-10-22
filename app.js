@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const dotenv = require('dotenv');
 
 const database = require('./util/database');
 const userRouter = require('./routes/user');
@@ -17,7 +18,7 @@ const app = express();
 
 app.use(cors());
 app.use(bodyParser.json());
-
+dotenv.config();
 
 app.use(['/expense', '/buyPremium'], authenticate);
 app.use('/user', userRouter);

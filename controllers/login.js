@@ -21,5 +21,5 @@ exports.verifyUser = async (req, res, next) => {
 }
 
 function incryptData(userId) {
-    return jwt.sign({ userId }, 'secret');
+    return jwt.sign({ userId }, process.env.TOKEN_SECRET);
 }
