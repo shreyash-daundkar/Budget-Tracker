@@ -9,5 +9,5 @@ module.exports = async (req, res, next) => {
 }
 
 function decryptData(token) {
-    return jwt.verify(token, 'secret');
+    return jwt.verify(token, process.env.TOKEN_SECRET);
 }
