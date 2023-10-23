@@ -11,7 +11,7 @@ exports.addexpense = async (req, res, next) => {
     try{
         req.user.expense += req.body.amount;
         req.user.save();
-        
+
         res.json(await req.user.createExpense(req.body));
     } catch(error) {
         handelDatabaseError(error);
@@ -25,6 +25,7 @@ exports.deleteexpense = async (req, res, next) => {
         if(data.length === 0) res.status(404).json({message: 'expense not found'});
     
         req.user.expense -= data[0].amount;
+        req.user.save();
 
         data[0].destroy();
     } catch (error) {
