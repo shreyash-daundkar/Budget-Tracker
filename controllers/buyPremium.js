@@ -29,7 +29,5 @@ exports.updateOrder = async (req, res, next) => {
     orders[0].save();
     req.user.isPremium = paymentId ? true : false;
     req.user.save();
-    console.log(orders[0]);
-    console.log(req.user);
     res.json();
 }

@@ -25,7 +25,7 @@ async function goPremium(e) {
             'handler': async res => {
                 await axios.post('http://localhost:4000/premium/buy', {orderId: order.id, paymentId: res.razorpay_payment_id});
                 alert('You are now Premium member');
-                premiumBtn.style.display = 'none'; 
+                loadPremiumFeatures();
             }
         }
         const rzp = new Razorpay(options);
@@ -33,7 +33,6 @@ async function goPremium(e) {
         e.preventDefault();
         rzp.on('payment.failed', async res => {
             await axios.post('http://localhost:4000/premium/buy', {orderId: order.id});
-            console.log(res);
             alert('Payment failed');
         })
     } catch(error) {
@@ -48,8 +47,14 @@ async function goPremium(e) {
 
 window.addEventListener('DOMContentLoaded', onRefresh);
 async function onRefresh() {
+    loadPremiumFeatures();
     const { data } = await axios.get(api);
     data.forEach(x => addExpense(x));
+}
+
+async function loadPremiumFeatures() {
+    const { data } = await axios.get('http://localhost:4000/premium/features');
+    if(data.isPremium) premiumBtn.style.display = 'none'; 
 }
 
 
