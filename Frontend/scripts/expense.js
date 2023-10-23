@@ -6,6 +6,7 @@ const amount = document.querySelector('#form-amount');
 const category = document.querySelector('#form-category');
 const des = document.querySelector('#form-des');
 const list = document.querySelector('#list');
+const leaderBoardBody = document.querySelector('#leaderboard-body');
 
 const api = 'http://localhost:4000/expense'
 const token = localStorage.getItem('token');
@@ -54,7 +55,17 @@ async function onRefresh() {
 
 async function loadPremiumFeatures() {
     const { data } = await axios.get('http://localhost:4000/premium/features');
-    if(data.isPremium) premiumBtn.style.display = 'none'; 
+    const {isPremium, leaderBoard} = data;
+    if(isPremium) {
+        premiumBtn.style.display = 'none';
+        let count = 0;
+        leaderBoard.forEach(user => {
+           const row = addElement('tr', leaderBoardBody);
+           const rank = addElement('td', row, ++count);
+           const name = addElement('td', row, user.username);
+           const expense = addElement('td', row, user.expense);
+        })
+    }
 }
 
 
@@ -139,7 +150,7 @@ function addExpense(obj) {
 function addElement(type, parent, text, ...classes) {
     const element = document.createElement(type);
     classes.forEach(c => element.classList.add(c));
-    if(text) element.textContent = text;
+    if(text !== null) element.textContent = text;
     parent.append(element);
     return element;
 }
