@@ -3,7 +3,7 @@ const buyPremiumController = require('../controllers/buyPremium');
 
 const router = express.Router();
 
-router.get('/', buyPremiumController.createOrder);
-router.post('/', buyPremiumController.updateOrder)
+router.get('/buy', buyPremiumController.createOrder);
+router.post('/buy', buyPremiumController.updateOrder)
 
 module.exports = router;

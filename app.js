@@ -6,7 +6,7 @@ const dotenv = require('dotenv');
 const database = require('./util/database');
 const userRouter = require('./routes/user');
 const expenseRouter = require('./routes/expense');
-const buyPremiumRoute = require('./routes/buyPremium');
+const premiumRoute = require('./routes/premium');
 const User = require('./models/users');
 const Expense = require('./models/expense');
 const Order = require('./models/order');
@@ -20,10 +20,10 @@ app.use(cors());
 app.use(bodyParser.json());
 dotenv.config();
 
-app.use(['/expense', '/buyPremium'], authenticate);
+app.use(['/expense', '/premium'], authenticate);
 app.use('/user', userRouter);
 app.use('/expense', expenseRouter);
-app.use('/buyPremium', buyPremiumRoute);
+app.use('/premium', premiumRoute);
 
 
 
