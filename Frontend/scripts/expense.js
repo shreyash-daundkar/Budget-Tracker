@@ -67,7 +67,7 @@ form.addEventListener('submit', onSubmit);
 async function onSubmit(e) {
     e.preventDefault();
     const expense = {
-        amount : amount.value,
+        amount : parseInt(amount.value),
         category : category.value,
         description : des.value,
     }
