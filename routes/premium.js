@@ -6,6 +6,6 @@ const router = express.Router();
 
 router.get('/buy', buyPremiumController.createOrder);
 router.post('/buy', buyPremiumController.updateOrder);
-router.get('/features', premiumFeatures);
+router.get('/features', premiumFeatures.leaderBoard);
 
 module.exports = router;
