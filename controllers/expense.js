@@ -15,9 +15,9 @@ exports.addexpense = async (req, res, next) => {
 
     try{
         req.user.expense += req.body.amount;
-        req.user.save({transaction: t});
+        await req.user.save({ transaction: t });
         
-        const expense = await req.user.createExpense(req.body, {transaction: t});
+        const expense = await req.user.createExpense(req.body, { transaction: t });
         await t.commit();
         res.json(expense);
         
@@ -30,13 +30,15 @@ exports.addexpense = async (req, res, next) => {
 
 exports.deleteexpense = async (req, res, next) => {
     try {
-        const data = await req.user.getExpenses({where: {id : req.query.expenseId}});
-        if(data.length === 0) res.status(404).json({message: 'expense not found'});
+        const data = await req.user.getExpenses({
+            where: { id : req.query.expenseId },
+        });
+        if(data.length === 0) res.status(404).json({ message: 'expense not found' });
     
         req.user.expense -= data[0].amount;
-        req.user.save();
+        await req.user.save();
 
-        data[0].destroy();
+        await data[0].destroy();
     } catch (error) {
         handelDatabaseError(error);
     }
@@ -44,26 +46,33 @@ exports.deleteexpense = async (req, res, next) => {
 
 
 exports.editexpense = async (req, res, next) => {
+    const t = await sequelize.transaction();
+    
     try {
-        const data = await req.user.getExpenses({where: {id : req.query.expenseId}});
-        if(data.length === 0) res.status(404).json({message: 'expense not found'});
+        const data = await req.user.getExpenses({
+            where: { id : req.query.expenseId }, 
+        });
+        if(data.length === 0) return res.status(404).json({ message: 'expense not found' });
 
         req.user.expense -= data[0].amount;
         req.user.expense += req.body.amount;
-        req.user.save();
+        await req.user.save({ transaction: t });
     
         data[0].amount = req.body.amount;
         data[0].category = req.body.category;
         data[0].description = req.body.description;
-        data[0].save();
-    
+        await data[0].save({ transaction: t });
+        
+        await t.commit();
         res.json(data[0]);
+
     } catch (error) {
+        await t.rollback();
         handelDatabaseError(error);
     }
 }
 
 
 function handelDatabaseError(error) {
-    req.status(500).json({message: err.message});
+    return req.status(500).json({message: err.message});
 }
