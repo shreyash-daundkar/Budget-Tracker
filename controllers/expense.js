@@ -1,3 +1,6 @@
+const sequelize = require('../util/database');
+
+
 exports.displayexpense = async (req, res, next) => {
     try {
         res.json(await req.user.getExpenses()); 
@@ -8,12 +11,18 @@ exports.displayexpense = async (req, res, next) => {
 
 
 exports.addexpense = async (req, res, next) => {
+    const t = await sequelize.transaction();
+
     try{
         req.user.expense += req.body.amount;
-        req.user.save();
-
-        res.json(await req.user.createExpense(req.body));
+        req.user.save({transaction: t});
+        
+        const expense = await req.user.createExpense(req.body, {transaction: t});
+        await t.commit();
+        res.json(expense);
+        
     } catch(error) {
+        await t.rollback();
         handelDatabaseError(error);
     }
 }
