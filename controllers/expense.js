@@ -29,6 +29,8 @@ exports.addexpense = async (req, res, next) => {
 
 
 exports.deleteexpense = async (req, res, next) => {
+    const t = await sequelize.transaction();
+
     try {
         const data = await req.user.getExpenses({
             where: { id : req.query.expenseId },
@@ -36,10 +38,14 @@ exports.deleteexpense = async (req, res, next) => {
         if(data.length === 0) res.status(404).json({ message: 'expense not found' });
     
         req.user.expense -= data[0].amount;
-        await req.user.save();
+        await req.user.save({transaction: t});
 
-        await data[0].destroy();
+        await data[0].destroy({transaction: t});
+
+        await t.commit();
+
     } catch (error) {
+        await t.rollback();
         handelDatabaseError(error);
     }
 }
@@ -74,5 +80,5 @@ exports.editexpense = async (req, res, next) => {
 
 
 function handelDatabaseError(error) {
-    return req.status(500).json({message: err.message});
+    return req.status(500).json({message: error.message});
 }
