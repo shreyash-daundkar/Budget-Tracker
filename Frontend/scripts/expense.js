@@ -90,7 +90,7 @@ async function onSubmit(e) {
         const { data } = await axios.post(url, expense);
         addExpense(data);
     } catch(error) {
-        console.log(err);
+        console.log(error.response.data.message);
     }
     amount.value = '';
     des.value = '';

@@ -5,7 +5,7 @@ exports.displayexpense = async (req, res, next) => {
     try {
         res.json(await req.user.getExpenses()); 
     } catch (error) {
-        handelDatabaseError(error);
+        handelDatabaseError(res, error);
     }
 }
 
@@ -23,7 +23,7 @@ exports.addexpense = async (req, res, next) => {
         
     } catch(error) {
         await t.rollback();
-        handelDatabaseError(error);
+        handelDatabaseError(res, error);
     }
 }
 
@@ -46,7 +46,7 @@ exports.deleteexpense = async (req, res, next) => {
 
     } catch (error) {
         await t.rollback();
-        handelDatabaseError(error);
+        handelDatabaseError(res, error);
     }
 }
 
@@ -74,11 +74,11 @@ exports.editexpense = async (req, res, next) => {
 
     } catch (error) {
         await t.rollback();
-        handelDatabaseError(error);
+        handelDatabaseError(res, error);
     }
 }
 
 
-function handelDatabaseError(error) {
-    return req.status(500).json({message: error.message});
+function handelDatabaseError(res, error) {
+    return res.status(500).json({message: error.message});
 }
