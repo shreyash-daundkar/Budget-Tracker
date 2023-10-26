@@ -9,7 +9,7 @@ sendBtn.addEventListener('click', sendEmail);
 async function sendEmail(e) {
     e.preventDefault();
     try {
-        const res = await axios.post('http://localhost:4000/user/forgot-password', { email: email.value });
+        const res = await axios.post('http://localhost:4000/forgot-password', { email: email.value });
         console.log(res)
     } catch (error) {
         console.log(error.message);
