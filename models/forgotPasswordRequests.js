@@ -6,7 +6,6 @@ module.exports = database.define('forgotPasswordRequests', {
         type: Sequelize.INTEGER,
         primaryKey: true,
         allowNull: false,
-        autoIncrement: true,
     },
     isActive: {
         type: Sequelize.BOOLEAN,

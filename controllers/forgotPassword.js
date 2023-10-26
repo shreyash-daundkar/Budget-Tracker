@@ -1,4 +1,5 @@
 const Sib = require('sib-api-v3-sdk');
+const { v4 } = require('uuid');
 const User = require('../models/users');
 
 
@@ -20,7 +21,7 @@ exports.sendMail = async (req, res, next) => {
     
         const receivers = [ { email } ];
         const users = await User.findAll({where: {email}});
-        const { id } = await users[0].createForgotPasswordRequest({ isActive: true});
+        const { id } = await users[0].createForgotPasswordRequest({id: v4(), isActive: true});
 
 
         const key = await transEmailApi.sendTransacEmail({
