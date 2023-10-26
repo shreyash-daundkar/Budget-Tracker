@@ -15,6 +15,7 @@ async function resetPassword(e) {
         if(newPassword.value === confirmPassword.value) {
             try {
                 await axios.post('http://localhost:4000/forgot-password/reset-password?id=' + id, { newPassword: newPassword.value });
+                window.location.href = 'login.html';
             } catch (error) {
                 console.log(error);
             }

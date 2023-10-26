@@ -4,7 +4,7 @@ const ForgotPasswordRequests = require('../models/forgotPasswordRequests');
 
 module.exports = async (req, res, next) => {
     const { newPassword } = req.body;
-    const id = parseInt(req.query.id);
+    const id = req.query.id;
 
     try {
         const requests = await ForgotPasswordRequests.findAll();
@@ -18,7 +18,9 @@ module.exports = async (req, res, next) => {
             const user = await request.getUser();
             user.password = await hashPassword(newPassword);
             user.save();
-        }
+        } else console.log('request is close');
+        
+        res.json();
     } catch (error) {
         console.log(error);
     }

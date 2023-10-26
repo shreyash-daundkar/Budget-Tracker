@@ -3,7 +3,7 @@ const database = require('../util/database');
 
 module.exports = database.define('forgotPasswordRequests', {
     id: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         primaryKey: true,
         allowNull: false,
     },

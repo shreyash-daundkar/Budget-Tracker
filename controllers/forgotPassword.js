@@ -4,7 +4,6 @@ const User = require('../models/users');
 
 
 exports.sendMail = async (req, res, next) => {
-    console.log(process.env.SMPT_KEY);
     try {
         const { email } = req.body;
     
@@ -22,7 +21,6 @@ exports.sendMail = async (req, res, next) => {
         const receivers = [ { email } ];
         const users = await User.findAll({where: {email}});
         const { id } = await users[0].createForgotPasswordRequest({id: v4(), isActive: true});
-
 
         const key = await transEmailApi.sendTransacEmail({
             sender,
