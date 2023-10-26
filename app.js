@@ -7,9 +7,11 @@ const database = require('./util/database');
 const userRouter = require('./routes/user');
 const expenseRouter = require('./routes/expense');
 const premiumRoute = require('./routes/premium');
+const forgotPasswordRoute = require('./routes/forgotPassword');
 const User = require('./models/users');
 const Expense = require('./models/expense');
 const Order = require('./models/order');
+const ForgotPasswordRequests = require('./models/forgotPasswordRequests');
 const authenticate = require('./controllers/authenticate');
 
 
@@ -24,6 +26,7 @@ app.use(['/expense', '/premium'], authenticate);
 app.use('/user', userRouter);
 app.use('/expense', expenseRouter);
 app.use('/premium', premiumRoute);
+app.use('/forgot-password', forgotPasswordRoute);
 
 
 
@@ -32,6 +35,9 @@ Expense.belongsTo(User);
 
 User.hasMany(Order);
 Order.belongsTo(User);
+
+User.hasMany(ForgotPasswordRequests);
+ForgotPasswordRequests.belongsTo(User);
 
 
 
