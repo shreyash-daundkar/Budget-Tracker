@@ -37,7 +37,7 @@ async function goPremium(e) {
             alert('Payment failed');
         })
     } catch(error) {
-        console.log(error.message);
+        handelErrors(error);
     }
 }
 
@@ -48,24 +48,32 @@ async function goPremium(e) {
 
 window.addEventListener('DOMContentLoaded', onRefresh);
 async function onRefresh() {
-    const { data } = await axios.get(api);
-    const {isPremium, expense} = data;
-    if(isPremium) loadPremiumFeatures();
-    expense.forEach(x => addExpense(x));
+    try {
+        const { data } = await axios.get(api);
+        const {isPremium, expense} = data;
+        if(isPremium) loadPremiumFeatures();
+        expense.forEach(x => addExpense(x));   
+    } catch (error) {
+        handelErrors(error);
+    }
 }
 
 async function loadPremiumFeatures() {
-    const { data } = await axios.get('http://localhost:4000/premium/features');
-    const {isPremium, leaderBoard} = data;
-    if(isPremium) {
-        premiumBtn.style.display = 'none';
-        let count = 0;
-        leaderBoard.forEach(user => {
-           const row = addElement('tr', leaderBoardBody);
-           const rank = addElement('td', row, ++count);
-           const name = addElement('td', row, user.username);
-           const expense = addElement('td', row, user.expense);
-        })
+    try {
+        const { data } = await axios.get('http://localhost:4000/premium/features/leaderboard');
+        const {isPremium, leaderBoard} = data;
+        if(isPremium) {
+            premiumBtn.style.display = 'none';
+            let count = 0;
+            leaderBoard.forEach(user => {
+               const row = addElement('tr', leaderBoardBody);
+               const rank = addElement('td', row, ++count);
+               const name = addElement('td', row, user.username);
+               const expense = addElement('td', row, user.expense);
+            })
+        }
+    } catch (error) {
+        handelErrors(error);
     }
 }
 
@@ -77,24 +85,29 @@ async function loadPremiumFeatures() {
 let editId = null;
 form.addEventListener('submit', onSubmit);
 async function onSubmit(e) {
-    e.preventDefault();
-    const expense = {
-        amount : parseInt(amount.value),
-        category : category.value,
-        description : des.value,
-    }
     try {
+        e.preventDefault();
+    
+        const expense = {
+            amount : parseInt(amount.value),
+            category : category.value,
+            description : des.value,
+        }
+    
         if(editId) {
             url = `${api}/edit?expenseId=${editId}`;
             editId = null;
         } else url = `${api}/add`;
+    
         const { data } = await axios.post(url, expense);
+    
         addExpense(data);
-    } catch(error) {
-        console.log(error.response.data.message);
+    
+        amount.value = '';
+        des.value = '';   
+    } catch (error) {
+        handelErrors(error);
     }
-    amount.value = '';
-    des.value = '';
 }
 
 
@@ -115,8 +128,12 @@ function listEvent(e) {
 
 async function dlt(li) {
     const id = li.getAttribute('data-id');
-    li.style.display = 'none';
-    await axios.delete(`${api}/delete?expenseId=${id}`);
+    try {
+        li.style.display = 'none';
+        await axios.delete(`${api}/delete?expenseId=${id}`);
+    } catch (error) {
+        handelErrors(error);
+    }
 }
 
 
@@ -154,4 +171,9 @@ function addElement(type, parent, text, ...classes) {
     if(text !== null) element.textContent = text;
     parent.append(element);
     return element;
+}
+
+function handelErrors() {
+    if(error.response.data) console.log(error.response.data.message);
+    else console.log(error);
 }
