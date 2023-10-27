@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/shreyash-daundkar/Budget-Tracker#readme",
   "dependencies": {
+    "aws-sdk": "^2.1482.0",
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
