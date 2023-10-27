@@ -3,7 +3,11 @@ const sequelize = require('../util/database');
 
 exports.displayexpense = async (req, res, next) => {
     try {
-        res.json(await req.user.getExpenses()); 
+        const isPremium = req.user.isPremium;
+        const expense = await req.user.getExpenses();
+
+        res.json({ isPremium, expense }); 
+        
     } catch (error) {
         handelDatabaseError(res, error);
     }

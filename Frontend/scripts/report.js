@@ -8,14 +8,9 @@ const tableBody = document.getElementById('expense-list');
 const premiumBtn = document.getElementById('premium-btn');
 const downloadBtn = document.getElementById('download-btn');
 
+const token = localStorage.getItem('token');
+axios.defaults.headers.common['authorization'] = token;
 
-
-// Event Listeners
-
-dailyReportBtn.addEventListener('click', () => fetchReport('daily'));
-weeklyReportBtn.addEventListener('click', () => fetchReport('weekly'));
-monthlyReportBtn.addEventListener('click', () => fetchReport('monthly'));
-yearlyReportBtn.addEventListener('click', () => fetchReport('yearly'));
 
 
 
@@ -25,17 +20,39 @@ window.addEventListener('DOMContentLoaded', onRefresh);
 async function onRefresh() {
     downloadBtn.style.display = 'none';
 
-    const { data } = await axios.get('http://localhost:4000/');
+    const { data } = await axios.get('http://localhost:4000/expense');
     const {isPremium, expense} = data;
-    
+
     populateTable(expense);
     
-    if(isPremium) {
+    if(true) {
         premiumBtn.style.display = 'none';
         downloadBtn.style.display = 'inline-block';
     }
 }
 
+
+
+
+// On Download
+
+downloadBtn.addEventListener('click', downloadReport);
+
+async function downloadReport() {
+    const { data } = await axios.get('http://localhost:4000/premium/features/download-report');
+
+}
+
+
+
+
+
+//  Time Frames Filter
+
+dailyReportBtn.addEventListener('click', () => fetchReport('daily'));
+weeklyReportBtn.addEventListener('click', () => fetchReport('weekly'));
+monthlyReportBtn.addEventListener('click', () => fetchReport('monthly'));
+yearlyReportBtn.addEventListener('click', () => fetchReport('yearly'));
 
 
 function fetchReport(timeframe) {
@@ -59,6 +76,11 @@ function fetchReport(timeframe) {
 
     populateTable(reportData);
 }
+
+
+
+
+// Utility Function 
 
 function populateTable(data) {
     

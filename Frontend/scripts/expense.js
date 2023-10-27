@@ -48,9 +48,10 @@ async function goPremium(e) {
 
 window.addEventListener('DOMContentLoaded', onRefresh);
 async function onRefresh() {
-    loadPremiumFeatures();
     const { data } = await axios.get(api);
-    data.forEach(x => addExpense(x));
+    const {isPremium, expense} = data;
+    if(isPremium) loadPremiumFeatures();
+    expense.forEach(x => addExpense(x));
 }
 
 async function loadPremiumFeatures() {
