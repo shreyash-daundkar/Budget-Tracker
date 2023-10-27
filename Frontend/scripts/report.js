@@ -18,16 +18,20 @@ axios.defaults.headers.common['authorization'] = token;
 
 window.addEventListener('DOMContentLoaded', onRefresh);
 async function onRefresh() {
-    downloadBtn.style.display = 'none';
+    try {
+        downloadBtn.style.display = 'none';
 
-    const { data } = await axios.get('http://localhost:4000/expense');
-    const {isPremium, expense} = data;
-
-    populateTable(expense);
-    
-    if(true) {
-        premiumBtn.style.display = 'none';
-        downloadBtn.style.display = 'inline-block';
+        const { data } = await axios.get('http://localhost:4000/expense');
+        const {isPremium, expense} = data;
+        
+        populateTable(expense);
+        
+        if(isPremium) {
+            premiumBtn.style.display = 'none';
+            downloadBtn.style.display = 'inline-block';
+        }
+    } catch (error) {
+        handelErrors(error);
     }
 }
 
@@ -39,8 +43,12 @@ async function onRefresh() {
 downloadBtn.addEventListener('click', downloadReport);
 
 async function downloadReport() {
-    const { data } = await axios.get('http://localhost:4000/premium/features/download-report');
-
+    try {
+        const { data } = await axios.get('http://localhost:4000/premium/features/download-report');
+        console.log(data);
+    } catch (error) {
+        handelErrors(error);
+    }
 }
 
 
@@ -89,11 +97,16 @@ function populateTable(data) {
     data.forEach(expense => {
         let row = document.createElement('tr');
         row.innerHTML = `
-            <td>${expense.description}</td>
-            <td>${expense.amount}</td>
-            <td>${expense.category}</td>
-            <td>${expense.date}</td>
+        <td>${expense.date}</td>
+        <td>${expense.amount}</td>
+        <td>${expense.category}</td>
+        <td>${expense.description}</td>
         `;
         tableBody.appendChild(row);
     });
+}
+
+function handelErrors(error) {
+    if(error.response.data) console.log(error.response.data.message);
+    else console.log(error);
 }
