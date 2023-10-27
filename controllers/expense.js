@@ -84,5 +84,6 @@ exports.editexpense = async (req, res, next) => {
 
 
 function handelDatabaseError(res, error) {
+    console.log(error.message);
     return res.status(500).json({message: error.message});
 }
