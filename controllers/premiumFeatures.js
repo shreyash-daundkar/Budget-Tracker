@@ -29,7 +29,7 @@ exports.downloadReport = async (req, res, next) => {
 
         const expense = await req.user.getExpenses();
         const fileData = JSON.stringify(expense);
-        const fileName = 'Expense' + req.user.id + new Date();
+        const fileName = 'Expense' + req.user.id + new Date().toISOString() + '.txt';
 
         const location = await storeInS3(fileName, fileData);
 
@@ -48,7 +48,6 @@ function storeInS3(fileName, fileData) {
             accessKeyId: process.env.AWS_ACCESS_KEY_ID,
             secretAccessKey: process.env.AWS_ACCESS_KEY_SECRET,
         });
-       // console.log(s3)
     
         const options = {
             Bucket: 'budget-tracker-57',

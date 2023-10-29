@@ -45,13 +45,19 @@ downloadBtn.addEventListener('click', downloadReport);
 async function downloadReport() {
     try {
         const { data } = await axios.get('http://localhost:4000/premium/features/download-report');
-        console.log(data);
+        downloadFile(data.location);
     } catch (error) {
         handelErrors(error);
     }
 }
 
 
+function downloadFile(url) {
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = true;
+    a.click();
+}
 
 
 
