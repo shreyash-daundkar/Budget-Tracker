@@ -15,9 +15,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
         try {
             const response = await axios.post('http://localhost:4000/user/login', loginData);
-            const {success, token} = response.data;
+            const {success, token, isPremium} = response.data;
             if (success) {
                 localStorage.setItem('token', token);
+                if(isPremium) localStorage.setItem('isPremium', 'true');
+                else localStorage.setItem('isPremium', 'false');
                 window.location.href = 'expense.html';
             } else {
                 showAlert('Something went wrong. Please try again.', 'danger');

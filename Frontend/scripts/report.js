@@ -12,6 +12,8 @@ const downloadHistoryBtn = document.getElementById('download-history-btn');
 const token = localStorage.getItem('token');
 axios.defaults.headers.common['authorization'] = token;
 
+isPremium = localStorage.getItem('isPremium');
+
 
 
 
@@ -24,7 +26,7 @@ async function onRefresh() {
         downloadHistoryBtn.style.display = 'none';
 
         const { data } = await axios.get('http://localhost:4000/expense');
-        const {isPremium, expense} = data;
+        const {expense} = data;
         
         populateTable(expense);
         
@@ -61,6 +63,14 @@ function downloadFile(url) {
     a.download = true;
     a.click();
 }
+
+
+
+
+// Download History
+
+downloadHistoryBtn.addEventListener('click', () => window.location.href = 'download-history.html');
+
 
 
 

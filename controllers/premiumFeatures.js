@@ -3,12 +3,10 @@ const User = require('../models/users');
 
 
 
-const notPremium = res => res.status(404).json({ message: 'User is not premium'});
-
 
 exports.leaderBoard = async (req, res, next) => {
     try {
-        if(!req.user.isPremium) notPremium(res);
+        if(!req.user.isPremium) throw {message: 'user is not premium'};
 
         const leaderBoard = await User.findAll({
             attributes: ['username', 'expense'],
@@ -25,7 +23,7 @@ exports.leaderBoard = async (req, res, next) => {
 
 exports.downloadReport = async (req, res, next) => {
     try {
-        if(!req.user.isPremium) notPremium(res);
+        if(!req.user.isPremium) throw {message: 'user is not premium'};
 
         const expense = await req.user.getExpenses();
         const fileData = JSON.stringify(expense);
@@ -73,7 +71,7 @@ function storeInS3(fileName, fileData) {
 
 exports.downloadHistory = async  (req, res, next) => {
     try {
-        if(!req.user.isPremium) notPremium(res);
+        if(!req.user.isPremium) throw {message: 'user is not premium'};
 
         const data = await req.user.getDownloadHistories();
         res.json(data);

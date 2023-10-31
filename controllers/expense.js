@@ -6,7 +6,7 @@ exports.displayexpense = async (req, res, next) => {
         const isPremium = req.user.isPremium;
         const expense = await req.user.getExpenses();
 
-        res.json({ isPremium, expense }); 
+        res.json({ expense }); 
         
     } catch (error) {
         handelDatabaseError(res, error);
