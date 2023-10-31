@@ -49,7 +49,7 @@ function storeInS3(fileName, fileData) {
             secretAccessKey: process.env.AWS_ACCESS_KEY_SECRET,
         });
     
-        const options = {
+        const options  = {
             Bucket: 'budget-tracker-57',
             Key: fileName,
             Body: fileData,
@@ -58,15 +58,13 @@ function storeInS3(fileName, fileData) {
     
         return new Promise((resolve, reject) => {
             s3.upload(options, (error, response) => {
-                if(error) {
-                    console.log(error)
-                    reject(error);
-                }
-                resolve(response.Location);
+                if(response) resolve(response.Location);
+                if(error) console.log(error);
+                reject({message : 'Error uploading on s3'});
             });
         });
     } catch (error) {
         console.log(error.message);
-        return res.status(500).json({message: 'Error uploading on s3'});
+        throw error;
     }
 }
