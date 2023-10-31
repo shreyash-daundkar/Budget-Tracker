@@ -6,7 +6,7 @@ const amount = document.querySelector('#form-amount');
 const category = document.querySelector('#form-category');
 const des = document.querySelector('#form-des');
 const list = document.querySelector('#list');
-const leaderBoardBody = document.querySelector('#leaderboard-body');
+const viewReportBtn = document.querySelector('#view-report-btn');
 
 const api = 'http://localhost:4000/expense'
 const token = localStorage.getItem('token');
@@ -60,10 +60,28 @@ async function onRefresh() {
 
 async function loadPremiumFeatures() {
     try {
+        premiumBtn.style.display = 'none';
+       
+        const leaderboardUi = addElement('div', document.body);
+        leaderboardUi.innerHTML =
+        ` <div class="container mt-5">
+              <h2 class="mb-4">Leaderboard</h2>
+              <table class="table table-bordered table-striped">
+                  <thead>
+                      <tr>
+                          <th>Rank</th>
+                          <th>Name</th>
+                          <th>Expense</th>
+                      </tr>
+                  </thead>
+                  <tbody id="leaderboard-body"></tbody>
+              </table>
+          </div>
+        `
+        const leaderBoardBody = document.querySelector('#leaderboard-body');
         const { data } = await axios.get('http://localhost:4000/premium/features/leaderboard');
         const {isPremium, leaderBoard} = data;
         if(isPremium) {
-            premiumBtn.style.display = 'none';
             let count = 0;
             leaderBoard.forEach(user => {
                const row = addElement('tr', leaderBoardBody);
@@ -148,6 +166,13 @@ async function edit(li) {
     des.value = li.children[5].textContent;
     li.style.display = 'none';
 }
+
+
+
+
+// View Report
+
+viewReportBtn.addEventListener('click', e => window.location.href = 'report.html');
 
 
 
