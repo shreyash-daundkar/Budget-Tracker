@@ -11,6 +11,7 @@ const forgotPasswordRoute = require('./routes/forgotPassword');
 const User = require('./models/users');
 const Expense = require('./models/expense');
 const Order = require('./models/order');
+const DownloadHistory = require('./models/downloadHistory');
 const ForgotPasswordRequests = require('./models/forgotPasswordRequests');
 const authenticate = require('./controllers/authenticate');
 
@@ -38,6 +39,9 @@ Order.belongsTo(User);
 
 User.hasMany(ForgotPasswordRequests);
 ForgotPasswordRequests.belongsTo(User);
+
+User.hasMany(DownloadHistory);
+DownloadHistory.belongsTo(User);
 
 
 
