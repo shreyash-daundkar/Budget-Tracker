@@ -7,6 +7,7 @@ const yearlyReportBtn = document.getElementById('yearly-report');
 const tableBody = document.getElementById('expense-list');
 const premiumBtn = document.getElementById('premium-btn');
 const downloadBtn = document.getElementById('download-btn');
+const downloadHistoryBtn = document.getElementById('download-history-btn');
 
 const token = localStorage.getItem('token');
 axios.defaults.headers.common['authorization'] = token;
@@ -20,6 +21,7 @@ window.addEventListener('DOMContentLoaded', onRefresh);
 async function onRefresh() {
     try {
         downloadBtn.style.display = 'none';
+        downloadHistoryBtn.style.display = 'none';
 
         const { data } = await axios.get('http://localhost:4000/expense');
         const {isPremium, expense} = data;
@@ -29,6 +31,7 @@ async function onRefresh() {
         if(isPremium) {
             premiumBtn.style.display = 'none';
             downloadBtn.style.display = 'inline-block';
+            downloadHistoryBtn.style.display = 'inline-block';
         }
     } catch (error) {
         handelErrors(error);
@@ -42,7 +45,7 @@ async function onRefresh() {
 
 downloadBtn.addEventListener('click', downloadReport);
 
-async function downloadReport() {
+async function downloadReport() { 
     try {
         const { data } = await axios.get('http://localhost:4000/premium/features/download-report');
         downloadFile(data.location);
