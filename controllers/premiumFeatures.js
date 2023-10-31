@@ -33,6 +33,8 @@ exports.downloadReport = async (req, res, next) => {
 
         const location = await storeInS3(fileName, fileData);
 
+        await req.user.createDownloadHistory({fileName, location});
+
         res.json({ location });
 
     } catch (error) {
@@ -66,5 +68,18 @@ function storeInS3(fileName, fileData) {
     } catch (error) {
         console.log(error.message);
         throw error;
+    }
+}
+
+exports.downloadHistory = async  (req, res, next) => {
+    try {
+        if(!req.user.isPremium) notPremium(res);
+
+        const data = await req.user.getDownloadHistories();
+        res.json(data);
+
+    } catch (error) {
+        console.log(error.message);
+        return res.status(500).json({message: 'Error fetching download history'});
     }
 }
