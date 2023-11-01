@@ -53,7 +53,8 @@ async function goPremium(e) {
 
 //on refresh
 
-let limit = 1;
+if(!localStorage.getItem('perPageLimit')) localStorage.setItem('perPageLimit', 1);
+let limit = localStorage.getItem('perPageLimit');
 let currPage = 1;
 let lastPage = 1;
 
@@ -61,7 +62,10 @@ window.addEventListener('DOMContentLoaded', onRefresh);
 async function onRefresh() {
     try {
         loadExpenses(currPage);
+        itemsPerPageSelect.value = limit;
+
         if(isPremium === 'true') loadPremiumFeatures();
+        
     } catch (error) {
         handelErrors(error);
     }
@@ -78,7 +82,10 @@ prevBtn.addEventListener('click', () => loadExpenses( --currPage ));
 
 itemsPerPageSelect.addEventListener('change', e => {
     currPage = 1;
+
     limit = parseInt(e.target.value);
+    localStorage.setItem('perPageLimit', limit);
+
     loadExpenses(currPage);
 });
 

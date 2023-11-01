@@ -23,7 +23,8 @@ isPremium = localStorage.getItem('isPremium');
 
 // On Refresh
 
-let limit = 10;
+if(!localStorage.getItem('perPageLimitReport')) localStorage.setItem('perPageLimitReport', 1);
+let limit = localStorage.getItem('perPageLimitReport');
 let currPage = 1;
 
 window.addEventListener('DOMContentLoaded', onRefresh);
@@ -32,6 +33,7 @@ async function onRefresh() {
         downloadBtn.style.display = 'none';
         downloadHistoryBtn.style.display = 'none';
 
+        itemsPerPageSelect.value = limit;
         loadExpenses(currPage);
 
         if(isPremium) {
@@ -70,7 +72,12 @@ prevBtn.addEventListener('click', () => loadExpenses( --currPage ));
 
 itemsPerPageSelect.addEventListener('change', e => {
     currPage = 1;
+
     limit = parseInt(e.target.value);
+    localStorage.setItem('perPageLimitReport', limit);
+
+    limit = parseInt(e.target.value);
+
     loadExpenses(currPage);
 });
 
