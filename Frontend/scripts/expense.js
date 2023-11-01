@@ -10,6 +10,8 @@ const viewReportBtn = document.querySelector('#view-report-btn');
 const viewLeaderboardBtn = document.querySelector('#view-leaderboard-btn');
 const nextBtn = document.querySelector('#next-btn');
 const prevBtn = document.querySelector('#prev-btn');
+const itemsPerPageSelect = document.getElementById('items-per-page');
+
 
 const api = 'http://localhost:4000/expense'
 const token = localStorage.getItem('token');
@@ -51,7 +53,7 @@ async function goPremium(e) {
 
 //on refresh
 
-const limit = 3;
+let limit = 1;
 let currPage = 1;
 let lastPage = 1;
 
@@ -74,7 +76,11 @@ nextBtn.addEventListener('click', () => loadExpenses( ++currPage ));
 
 prevBtn.addEventListener('click', () => loadExpenses( --currPage ));
 
-
+itemsPerPageSelect.addEventListener('change', e => {
+    currPage = 1;
+    limit = parseInt(e.target.value);
+    loadExpenses(currPage);
+});
 
 
 // Managing form Events
