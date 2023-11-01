@@ -8,6 +8,8 @@ const tableBody = document.getElementById('expense-list');
 const premiumBtn = document.getElementById('premium-btn');
 const downloadBtn = document.getElementById('download-btn');
 const downloadHistoryBtn = document.getElementById('download-history-btn');
+const nextBtn = document.querySelector('#next-btn');
+const prevBtn = document.querySelector('#prev-btn');
 
 const token = localStorage.getItem('token');
 axios.defaults.headers.common['authorization'] = token;
@@ -19,17 +21,17 @@ isPremium = localStorage.getItem('isPremium');
 
 // On Refresh
 
+const limit = 10;
+let currPage = 1;
+
 window.addEventListener('DOMContentLoaded', onRefresh);
 async function onRefresh() {
     try {
         downloadBtn.style.display = 'none';
         downloadHistoryBtn.style.display = 'none';
 
-        const { data } = await axios.get('http://localhost:4000/expense');
-        const {expense} = data;
-        
-        populateTable(expense);
-        
+        loadExpenses(currPage);
+
         if(isPremium) {
             premiumBtn.style.display = 'none';
             downloadBtn.style.display = 'inline-block';
@@ -39,6 +41,30 @@ async function onRefresh() {
         handelErrors(error);
     }
 }
+
+async function loadExpenses(currPage) {
+    try {
+        const { data: { expense, totalPages}} = await axios.get(`http://localhost:4000/expense?currPage=${currPage}&limit=${limit}`);
+        
+        if(currPage < totalPages) nextBtn.style.display = 'inline-block';
+        else nextBtn.style.display = 'none';
+        
+        if(currPage - 1) prevBtn.style.display = 'inline-block';
+        else prevBtn.style.display = 'none';
+        
+        populateTable(expense);      
+    } catch (error) {
+        handelErrors(error);
+    }
+}
+
+
+
+// Pagination
+
+nextBtn.addEventListener('click', () => loadExpenses( ++currPage ));
+
+prevBtn.addEventListener('click', () => loadExpenses( --currPage ));
 
 
 

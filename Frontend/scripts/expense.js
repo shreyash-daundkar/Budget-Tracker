@@ -51,7 +51,7 @@ async function goPremium(e) {
 
 //on refresh
 
-const limit = 1;
+const limit = 3;
 let currPage = 1;
 let lastPage = 1;
 
