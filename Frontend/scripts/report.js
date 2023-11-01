@@ -10,6 +10,8 @@ const downloadBtn = document.getElementById('download-btn');
 const downloadHistoryBtn = document.getElementById('download-history-btn');
 const nextBtn = document.querySelector('#next-btn');
 const prevBtn = document.querySelector('#prev-btn');
+const itemsPerPageSelect = document.getElementById('items-per-page');
+
 
 const token = localStorage.getItem('token');
 axios.defaults.headers.common['authorization'] = token;
@@ -21,7 +23,7 @@ isPremium = localStorage.getItem('isPremium');
 
 // On Refresh
 
-const limit = 10;
+let limit = 10;
 let currPage = 1;
 
 window.addEventListener('DOMContentLoaded', onRefresh);
@@ -65,6 +67,13 @@ async function loadExpenses(currPage) {
 nextBtn.addEventListener('click', () => loadExpenses( ++currPage ));
 
 prevBtn.addEventListener('click', () => loadExpenses( --currPage ));
+
+itemsPerPageSelect.addEventListener('change', e => {
+    currPage = 1;
+    limit = parseInt(e.target.value);
+    loadExpenses(currPage);
+});
+
 
 
 
