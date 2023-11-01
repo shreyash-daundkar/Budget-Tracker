@@ -3,15 +3,29 @@ const sequelize = require('../util/database');
 
 exports.displayexpense = async (req, res, next) => {
     try {
-        const isPremium = req.user.isPremium;
-        const expense = await req.user.getExpenses();
+        const currPage = parseInt(req.query.currPage);
+        const limit = parseInt(req.query.limit);
 
-        res.json({ expense }); 
+        if (isNaN(currPage) || isNaN(limit)) {
+            return res.status(400).json({ message: 'Invalid page or limit parameter' });
+        }
+
+        const offset = (currPage - 1) * limit;
+
+        const count = await req.user.countExpenses();
+        const totalPages = Math.ceil(count / limit);
+
+        console.log('totalPages:', totalPages);
+
+        const expense = await req.user.getExpenses({ offset, limit });
+
+        res.json({ expense, totalPages }); 
         
     } catch (error) {
         handelDatabaseError(res, error);
     }
 }
+
 
 
 exports.addexpense = async (req, res, next) => {
@@ -84,6 +98,6 @@ exports.editexpense = async (req, res, next) => {
 
 
 function handelDatabaseError(res, error) {
-    console.log(error.message);
+    console.log(error);
     return res.status(500).json({message: error.message});
 }
