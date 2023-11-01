@@ -52,12 +52,13 @@ async function goPremium(e) {
 //on refresh
 
 const limit = 1;
-const offset = 0;
+let currPage = 1;
+let lastPage = 1;
 
 window.addEventListener('DOMContentLoaded', onRefresh);
 async function onRefresh() {
     try {
-        loadExpenses(offset);
+        loadExpenses(currPage);
         if(isPremium === 'true') loadPremiumFeatures();
     } catch (error) {
         handelErrors(error);
@@ -69,9 +70,9 @@ async function onRefresh() {
 
 // Pagination
 
-// nextBtn.addEventListener('click', () => loadExpenses(++offset));
+nextBtn.addEventListener('click', () => loadExpenses( ++currPage ));
 
-// prevBtn.addEventListener('click', () => loadExpenses(--offset));
+prevBtn.addEventListener('click', () => loadExpenses( --currPage ));
 
 
 
@@ -97,7 +98,7 @@ async function onSubmit(e) {
     
         const { data } = await axios.post(url, expense);
         
-        addExpense(data);
+        if(currPage === lastPage)addExpense(data);
         
         amount.value = '';
         des.value = '';   
@@ -158,17 +159,19 @@ viewReportBtn.addEventListener('click', e => window.location.href = 'report.html
 // Utility functions
 
 
-async function loadExpenses(offset) {
+async function loadExpenses(currPage) {
     try {
-        const { data: { expense, totalPages } } = await axios.get(api) 
-        // + `?offset=${offset}&limit=${limit}`;
+        const { data: { expense, totalPages } } = await axios.get(api+ `?currPage=${currPage}&limit=${limit}`);
+
+        lastPage = totalPages
     
-        // if(offset) nextBtn.style.display = 'inline-block';
-        // else nextBtn.style.display = 'none';
+        if(currPage < totalPages) nextBtn.style.display = 'inline-block';
+        else nextBtn.style.display = 'none';
     
-        // if(offset < totalPages) prevBtn.style.display = 'inline-block';
-        // else prevBtn.style.display = 'none';
-    
+        if(currPage - 1) prevBtn.style.display = 'inline-block';
+        else prevBtn.style.display = 'none';
+        
+        list.innerHTML = '';
         expense.forEach(x => addExpense(x));       
     } catch (error) {
         handelErrors(error);
@@ -235,6 +238,6 @@ function addElement(type, parent, text, ...classes) {
 
 
 function handelErrors(error) {
-    if(error.response.data) console.log(error.response.data.message);
+    if(error.response) console.log(error.response.data.message);
     else console.log(error);
 }
