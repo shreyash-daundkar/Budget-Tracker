@@ -1,7 +1,10 @@
 const express = require('express');
+const path = require('path');
+const fs = require('fs');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const helmet = require('helmet');
+const morgan = require('morgan');
 require('dotenv').config();
 
 const database = require('./util/database');
@@ -20,9 +23,12 @@ const authenticate = require('./controllers/authenticate');
 
 const app = express();
 
+const accessLogStrems = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
+
 app.use(cors());
 app.use(bodyParser.json());
 app.use(helmet());
+app.use(morgan('combined', { stream: accessLogStrems }));
 
 app.use(['/expense', '/premium'], authenticate);
 app.use('/user', userRouter);
