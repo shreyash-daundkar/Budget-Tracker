@@ -3,26 +3,28 @@ const ForgotPasswordRequests = require('../models/forgotPasswordRequests');
 
 
 module.exports = async (req, res, next) => {
-    const { newPassword } = req.body;
-    const id = req.query.id;
-
     try {
+        const { newPassword } = req.body;
+        const id = req.query.id;
+
         const requests = await ForgotPasswordRequests.findAll();
         requests.filter(request => request.id == id ? true : false);
         const request = requests[0];
-
-        if(request.isActive) {
-            request.isActive = false;
-            request.save();
-
-            const user = await request.getUser();
-            user.password = await hashPassword(newPassword);
-            user.save();
-        } else console.log('request is close');
-        
+    
+            if(request.isActive) {
+                request.isActive = false;
+                request.save();
+    
+                const user = await request.getUser();
+                user.password = await hashPassword(newPassword);
+                user.save();
+            } else console.log('request is close');
+            
         res.json();
+
     } catch (error) {
         console.log(error);
+        return res.status(500).json({Message: 'error in reset password'});
     }
 }
 

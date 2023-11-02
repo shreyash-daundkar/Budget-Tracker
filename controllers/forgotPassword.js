@@ -29,11 +29,10 @@ exports.sendMail = async (req, res, next) => {
             textContent: `http://127.0.0.1:5501/Frontend/reset-password.html?id=${id}`,
         });  
 
-
         res.json({ key });
-
     } catch (error) {
         console.log(error);
+        return res.status(500).json({message: 'error in sending mail'});
     }
 
 }

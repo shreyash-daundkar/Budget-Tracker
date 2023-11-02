@@ -16,6 +16,7 @@ exports.leaderBoard = async (req, res, next) => {
         res.json({isPremium: req.user.isPremium, leaderBoard});
 
     } catch (error) {
+        console.log(error);
         return res.status(500).json({message: 'Error feaching leaderboard'});
     }
 }    
@@ -36,7 +37,7 @@ exports.downloadReport = async (req, res, next) => {
         res.json({ location });
 
     } catch (error) {
-        console.log(error.message);
+        console.log(error);
         return res.status(500).json({message: 'Error downloding report'});
     }
 }
@@ -64,7 +65,7 @@ function storeInS3(fileName, fileData) {
             });
         });
     } catch (error) {
-        console.log(error.message);
+        console.log(error);
         throw error;
     }
 }
@@ -77,7 +78,7 @@ exports.downloadHistory = async  (req, res, next) => {
         res.json(data);
 
     } catch (error) {
-        console.log(error.message);
+        console.log(error);
         return res.status(500).json({message: 'Error fetching download history'});
     }
 }
