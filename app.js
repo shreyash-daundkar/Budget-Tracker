@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const dotenv = require('dotenv');
+require('dotenv').config();
 
 const database = require('./util/database');
 const userRouter = require('./routes/user');
@@ -21,7 +21,6 @@ const app = express();
 
 app.use(cors());
 app.use(bodyParser.json());
-dotenv.config();
 
 app.use(['/expense', '/premium'], authenticate);
 app.use('/user', userRouter);
@@ -49,5 +48,5 @@ createServer();
 
 async function createServer() {
     const res = await database.sync(); 
-    app.listen(4000);
+    app.listen(process.env.PORT || 4000);
 }

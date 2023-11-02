@@ -14,8 +14,8 @@ exports.sendMail = async (req, res, next) => {
         const transEmailApi = new Sib.TransactionalEmailsApi();
     
         const sender = {
-            email: 'shreyashdaundkar@gmail.com',
-            name: 'Budget Tracker',
+            email: process.env.EMAIL_SENDER_EMAIL,
+            name: process.env.EMAIL_SENDER_NAME,
         }
     
         const receivers = [ { email } ];

@@ -50,7 +50,7 @@ function storeInS3(fileName, fileData) {
         });
     
         const options  = {
-            Bucket: 'budget-tracker-57',
+            Bucket: process.env.AWS_S3_BUCKET_NAME,
             Key: fileName,
             Body: fileData,
             ACL: 'public-read',
