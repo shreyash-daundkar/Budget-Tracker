@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const helmet = require('helmet');
 require('dotenv').config();
 
 const database = require('./util/database');
@@ -21,6 +22,7 @@ const app = express();
 
 app.use(cors());
 app.use(bodyParser.json());
+app.use(helmet());
 
 app.use(['/expense', '/premium'], authenticate);
 app.use('/user', userRouter);
