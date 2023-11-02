@@ -1,12 +1,20 @@
 module.exports = (req, res, next) => {
-    const {email, password} = req.body;
-    if(email && !isValidEmail(email)) {
-        return res.status(400).send('Invalid Email');
+    try {
+        const {email, password} = req.body;
+
+        if(email && !isValidEmail(email)) {
+            return res.status(400).send('Invalid Email');
+        }
+
+        if(password && !isValidPassword(password)) {
+            return res.status(400).send('Invalid Password');
+        }
+
+        next();   
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({message: 'error in user validation'});
     }
-    if(password && !isValidPassword(password)) {
-        return res.status(400).send('Invalid Password');
-    }
-    next();
 }
 
 
