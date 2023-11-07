@@ -20,7 +20,7 @@ const ForgotPasswordRequests = require('./models/forgotPasswordRequests');
 const authenticate = require('./controllers/authenticate');
 
 
-
+ 
 const app = express();
 
 const accessLogStrems = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
@@ -35,6 +35,10 @@ app.use('/user', userRouter);
 app.use('/expense', expenseRouter);
 app.use('/premium', premiumRoute);
 app.use('/forgot-password', forgotPasswordRoute);
+
+app.use((req, res, next) => {
+    res.sendFile(path.join(__dirname, `public${req.url}`));
+});
 
 
 
