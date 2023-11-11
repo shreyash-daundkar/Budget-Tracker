@@ -23,12 +23,10 @@ const authenticate = require('./controllers/authenticate');
  
 const app = express();
 
-const accessLogStrems = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
 
 app.use(cors());
 app.use(bodyParser.json());
 app.use(helmet());
-app.use(morgan('combined', { stream: accessLogStrems }));
 
 app.use(['/expense', '/premium'], authenticate);
 app.use('/user', userRouter);
