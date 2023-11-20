@@ -3,8 +3,6 @@ const path = require('path');
 const fs = require('fs');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const helmet = require('helmet');
-const morgan = require('morgan');
 require('dotenv').config();
 
 const database = require('./util/database');
@@ -23,10 +21,8 @@ const authenticate = require('./controllers/authenticate');
  
 const app = express();
 
-
 app.use(cors());
 app.use(bodyParser.json());
-app.use(helmet());
 
 app.use(['/expense', '/premium'], authenticate);
 app.use('/user', userRouter);
@@ -34,8 +30,8 @@ app.use('/expense', expenseRouter);
 app.use('/premium', premiumRoute);
 app.use('/forgot-password', forgotPasswordRoute);
 
-app.use((req, res, next) => {
-    res.sendFile(path.join(__dirname, `public${req.url}`));
+app.use('/', (req, res, next) => {
+    res.sendFile(path.join(__dirname , 'public' + req.url))
 });
 
 
@@ -54,9 +50,6 @@ DownloadHistory.belongsTo(User);
 
 
 
-createServer();
-
-async function createServer() {
-    const res = await database.sync(); 
-    app.listen(process.env.PORT || 4000);
-}
+database.sync()
+ .then(() => app.listen(process.env.PORT || 4000))
+ .catch(error => console.log(error));
