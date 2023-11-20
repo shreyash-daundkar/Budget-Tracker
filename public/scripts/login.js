@@ -1,3 +1,11 @@
+// host
+
+const { host } = new URL(window.location.href);
+
+
+
+
+
 document.addEventListener("DOMContentLoaded", function() {
     const form = document.getElementById('login-form');
     const alertDiv = document.getElementById('alert-message');
@@ -14,7 +22,7 @@ document.addEventListener("DOMContentLoaded", function() {
         };
 
         try {
-            const response = await axios.post('http://localhost:4000/user/login', loginData);
+            const response = await axios.post(`http://${host}/user/login`, loginData);
             const {success, token, isPremium} = response.data;
             if (success) {
                 localStorage.setItem('token', token);

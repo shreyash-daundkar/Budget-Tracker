@@ -1,3 +1,11 @@
+// host
+
+const { host } = new URL(window.location.href);
+
+
+
+
+
 // Selecting Elements
 
 const form = document.querySelector('#set-password-form');
@@ -14,7 +22,7 @@ async function resetPassword(e) {
     if(newPassword.value.length >= 8) {
         if(newPassword.value === confirmPassword.value) {
             try {
-                await axios.post('http://localhost:4000/forgot-password/reset-password?id=' + id, { newPassword: newPassword.value });
+                await axios.post(`http://${host}/forgot-password/reset-password?id=` + id, { newPassword: newPassword.value });
                 window.location.href = 'login.html';
             } catch (error) {
                 console.log(error);

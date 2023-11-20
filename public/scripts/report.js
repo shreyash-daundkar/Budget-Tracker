@@ -1,3 +1,11 @@
+// host
+
+const { host } = new URL(window.location.href);
+
+
+
+
+
 // Selecting elements
 
 const dailyReportBtn = document.getElementById('daily-report');
@@ -48,7 +56,7 @@ async function onRefresh() {
 
 async function loadExpenses(currPage) {
     try {
-        const { data: { expense, totalPages}} = await axios.get(`http://localhost:4000/expense?currPage=${currPage}&limit=${limit}`);
+        const { data: { expense, totalPages}} = await axios.get(`http://${host}/expense?currPage=${currPage}&limit=${limit}`);
         
         if(currPage < totalPages) nextBtn.style.display = 'inline-block';
         else nextBtn.style.display = 'none';
@@ -91,7 +99,7 @@ downloadBtn.addEventListener('click', downloadReport);
 
 async function downloadReport() { 
     try {
-        const { data } = await axios.get('http://localhost:4000/premium/features/download-report');
+        const { data } = await axios.get(`http://${host}/premium/features/download-report`);
         downloadFile(data.location);
     } catch (error) {
         handelErrors(error);

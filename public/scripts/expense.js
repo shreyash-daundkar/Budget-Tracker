@@ -1,3 +1,11 @@
+// host
+
+const { host } = new URL(window.location.href);
+
+
+
+
+
 // Selecting elements
 
 const premiumBtn = document.querySelector('#premium-btn');
@@ -13,7 +21,7 @@ const prevBtn = document.querySelector('#prev-btn');
 const itemsPerPageSelect = document.getElementById('items-per-page');
 
 
-const api = 'http://localhost:4000/expense'
+const api = `http://${host}/expense`
 const token = localStorage.getItem('token');
 axios.defaults.headers.common['authorization'] = token;
 
@@ -25,12 +33,12 @@ const isPremium = localStorage.getItem('isPremium');
 premiumBtn.addEventListener('click', goPremium);
 async function goPremium(e) {
     try {
-        const { data: {key, order} } = await axios.get('http://localhost:4000/premium/buy');
+        const { data: {key, order} } = await axios.get(`http://${host}/premium/buy`);
         const options = {
             key,
             order_id: order.id,
             'handler': async res => {
-                await axios.post('http://localhost:4000/premium/buy', {orderId: order.id, paymentId: res.razorpay_payment_id});
+                await axios.post(`http://${host}/premium/buy`, {orderId: order.id, paymentId: res.razorpay_payment_id});
                 alert('You are now Premium member');
                 isPremium = true;
                 loadPremiumFeatures();
@@ -40,7 +48,7 @@ async function goPremium(e) {
         rzp.open();
         e.preventDefault();
         rzp.on('payment.failed', async res => {
-            await axios.post('http://localhost:4000/premium/buy', {orderId: order.id});
+            await axios.post(`http://${host}/premium/buy`, {orderId: order.id});
             alert('Payment failed');
         })
     } catch(error) {
@@ -212,7 +220,7 @@ async function loadPremiumFeatures() {
           </div>
         `
         const leaderBoardBody = document.querySelector('#leaderboard-body');
-        const { data } = await axios.get('http://localhost:4000/premium/features/leaderboard');
+        const { data } = await axios.get(`http://${host}/premium/features/leaderboard`);
         const {isPremium, leaderBoard} = data;
         if(isPremium) {
             let count = 0;
