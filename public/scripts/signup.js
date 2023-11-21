@@ -1,3 +1,11 @@
+// host
+
+const { host } = new URL(window.location.href);
+
+
+
+
+
 document.addEventListener("DOMContentLoaded", function() {
     const form = document.getElementById('signup-form');
     const alertDiv = document.getElementById('alert-message');
@@ -16,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function() {
         };
 
         try {
-            const response = await axios.post('http://localhost:4000/user/signup', userData);
+            const response = await axios.post(`http://${host}/user/signup`, userData);
             
             if (response.data.success) {
                 showAlert('Signup successful!', 'success');
