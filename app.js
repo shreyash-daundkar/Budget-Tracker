@@ -1,6 +1,5 @@
 const express = require('express');
 const path = require('path');
-const fs = require('fs');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 require('dotenv').config();
@@ -15,7 +14,7 @@ const Expense = require('./models/expense');
 const Order = require('./models/order');
 const DownloadHistory = require('./models/downloadHistory');
 const ForgotPasswordRequests = require('./models/forgotPasswordRequests');
-const authenticate = require('./controllers/authenticate');
+const authenticate = require('./middlewares/authenticate');
 
 
  

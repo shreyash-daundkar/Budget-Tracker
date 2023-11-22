@@ -1,6 +1,6 @@
 const express = require('express');
 
-const validation = require('../controllers/validation');
+const validation = require('../middlewares/validation');
 const signup = require('../controllers/singup');
 const login = require('../controllers/login');
 const forgotPassword = require('../controllers/forgotPassword');
