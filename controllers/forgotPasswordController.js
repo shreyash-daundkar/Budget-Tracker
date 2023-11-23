@@ -1,6 +1,6 @@
 const Sib = require('sib-api-v3-sdk');
 const { v4 } = require('uuid');
-const User = require('../models/users');
+const User = require('../models/usersModel');
 
 
 exports.sendMail = async (req, res, next) => {

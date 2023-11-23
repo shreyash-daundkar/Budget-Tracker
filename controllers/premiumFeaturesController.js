@@ -1,5 +1,5 @@
 const Aws = require('aws-sdk');
-const User = require('../models/users');
+const User = require('../models/usersModel');
 
 
 
