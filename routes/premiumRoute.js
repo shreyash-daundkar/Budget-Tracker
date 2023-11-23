@@ -1,6 +1,6 @@
 const express = require('express');
-const buyPremiumController = require('../controllers/buyPremium');
-const premiumFeatures = require('../controllers/premiumFeatures');
+const buyPremiumController = require('../controllers/buyPremiumController');
+const premiumFeatures = require('../controllers/premiumFeaturesController');
 
 const router = express.Router();
 
