@@ -5,15 +5,18 @@ const cors = require('cors');
 require('dotenv').config();
 
 const database = require('./util/database');
-const userRouter = require('./routes/user');
-const expenseRouter = require('./routes/expense');
-const premiumRoute = require('./routes/premium');
-const forgotPasswordRoute = require('./routes/forgotPassword');
-const User = require('./models/users');
-const Expense = require('./models/expense');
-const Order = require('./models/order');
-const DownloadHistory = require('./models/downloadHistory');
-const ForgotPasswordRequests = require('./models/forgotPasswordRequests');
+
+const userRouter = require('./routes/userRoute');
+const expenseRouter = require('./routes/expenseRoute');
+const premiumRoute = require('./routes/premiumRoute');
+const forgotPasswordRoute = require('./routes/forgotPasswordRoute');
+
+const User = require('./models/usersModel');
+const Expense = require('./models/expenseModel');
+const Order = require('./models/orderModel');
+const DownloadHistory = require('./models/downloadHistoryModel');
+const ForgotPasswordRequests = require('./models/forgotPasswordRequestsModel');
+
 const authenticate = require('./middlewares/authenticate');
 
 

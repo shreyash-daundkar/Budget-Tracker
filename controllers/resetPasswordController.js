@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-const ForgotPasswordRequests = require('../models/forgotPasswordRequests');
+const ForgotPasswordRequests = require('../models/forgotPasswordRequestsModel');
 
 
 module.exports = async (req, res, next) => {
