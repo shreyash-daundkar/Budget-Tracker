@@ -25,7 +25,7 @@ const api = `http://${host}/expense`
 const token = localStorage.getItem('token');
 axios.defaults.headers.common['authorization'] = token;
 
-const isPremium = localStorage.getItem('isPremium');
+let isPremium = localStorage.getItem('isPremium');
 
 
 // Go premium
@@ -40,7 +40,8 @@ async function goPremium(e) {
             'handler': async res => {
                 await axios.post(`http://${host}/premium/buy`, {orderId: order.id, paymentId: res.razorpay_payment_id});
                 alert('You are now Premium member');
-                isPremium = true;
+                isPremium = 'true';
+                localStorage.setItem('isPremium', 'true');
                 loadPremiumFeatures();
             }
         }
@@ -99,7 +100,7 @@ itemsPerPageSelect.addEventListener('change', e => {
 
 
 // Managing form Events
-
+       
 let editId = null;
 form.addEventListener('submit', onSubmit);
 async function onSubmit(e) {
@@ -119,7 +120,8 @@ async function onSubmit(e) {
     
         const { data } = await axios.post(url, expense);
         
-        if(currPage === lastPage)addExpense(data);
+        //if(currPage === lastPage) 
+        addExpense(data);
         
         amount.value = '';
         des.value = '';   
@@ -184,7 +186,7 @@ async function loadExpenses(currPage) {
     try {
         const { data: { expense, totalPages } } = await axios.get(api+ `?currPage=${currPage}&limit=${limit}`);
 
-        lastPage = totalPages
+        //lastPage = totalPages
     
         if(currPage < totalPages) nextBtn.style.display = 'inline-block';
         else nextBtn.style.display = 'none';

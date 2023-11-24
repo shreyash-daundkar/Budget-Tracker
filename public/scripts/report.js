@@ -24,7 +24,7 @@ const itemsPerPageSelect = document.getElementById('items-per-page');
 const token = localStorage.getItem('token');
 axios.defaults.headers.common['authorization'] = token;
 
-isPremium = localStorage.getItem('isPremium');
+let isPremium = localStorage.getItem('isPremium');
 
 
 
@@ -38,13 +38,14 @@ let currPage = 1;
 window.addEventListener('DOMContentLoaded', onRefresh);
 async function onRefresh() {
     try {
+        console.log(downloadBtn, downloadHistoryBtn, isPremium)
         downloadBtn.style.display = 'none';
         downloadHistoryBtn.style.display = 'none';
 
         itemsPerPageSelect.value = limit;
         loadExpenses(currPage);
 
-        if(isPremium) {
+        if(isPremium === 'true') {
             premiumBtn.style.display = 'none';
             downloadBtn.style.display = 'inline-block';
             downloadHistoryBtn.style.display = 'inline-block';
