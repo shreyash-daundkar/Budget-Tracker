@@ -1,6 +1,6 @@
 const Aws = require('aws-sdk');
-const User = require('../models/usersModel');
 
+const User = require('../models/user');
 
 
 
@@ -22,6 +22,7 @@ exports.leaderBoard = async (req, res, next) => {
 }    
 
 
+
 exports.downloadReport = async (req, res, next) => {
     try {
         if(!req.user.isPremium) throw {message: 'user is not premium'};
@@ -41,7 +42,6 @@ exports.downloadReport = async (req, res, next) => {
         return res.status(500).json({message: 'Error downloding report'});
     }
 }
-
 
 function storeInS3(fileName, fileData) {
     try {
@@ -67,18 +67,5 @@ function storeInS3(fileName, fileData) {
     } catch (error) {
         console.log(error);
         throw error;
-    }
-}
-
-exports.downloadHistory = async  (req, res, next) => {
-    try {
-        if(!req.user.isPremium) throw {message: 'user is not premium'};
-
-        const data = await req.user.getDownloadHistories();
-        res.json(data);
-
-    } catch (error) {
-        console.log(error);
-        return res.status(500).json({message: 'Error fetching download history'});
     }
 }
