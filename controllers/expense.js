@@ -1,7 +1,7 @@
 const sequelize = require('../util/database');
 
 
-exports.displayexpense = async (req, res, next) => {
+exports.displayExpense = async (req, res, next) => {
     try {
         const currPage = parseInt(req.query.currPage);
         const limit = parseInt(req.query.limit);
@@ -28,7 +28,7 @@ exports.displayexpense = async (req, res, next) => {
 
 
 
-exports.addexpense = async (req, res, next) => {
+exports.addExpense = async (req, res, next) => {
     const t = await sequelize.transaction();
 
     try{
@@ -46,7 +46,7 @@ exports.addexpense = async (req, res, next) => {
 }
 
 
-exports.deleteexpense = async (req, res, next) => {
+exports.deleteExpense = async (req, res, next) => {
     const t = await sequelize.transaction();
 
     try {
@@ -69,7 +69,7 @@ exports.deleteexpense = async (req, res, next) => {
 }
 
 
-exports.editexpense = async (req, res, next) => {
+exports.editExpense = async (req, res, next) => {
     const t = await sequelize.transaction();
     
     try {
