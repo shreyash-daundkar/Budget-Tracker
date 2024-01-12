@@ -100,7 +100,7 @@ downloadBtn.addEventListener('click', downloadReport);
 
 async function downloadReport() { 
     try {
-        const { data } = await axios.get(`http://${host}/premium/features/download-report`);
+        const { data } = await axios.get(`http://${host}/premium-features/download-report`);
         downloadFile(data.location);
     } catch (error) {
         handelErrors(error);
