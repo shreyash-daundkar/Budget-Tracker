@@ -24,7 +24,7 @@ axios.defaults.headers.common['authorization'] = token;
 window.addEventListener('DOMContentLoaded', getHistory);
 async function getHistory() {
     try {
-        const { data } = await axios.get(`http://${host}/premium/features/download-history`);
+        const { data } = await axios.get(`http://${host}/download-history`);
         populateTable(data);
     } catch(error) {
         console.log(error);
