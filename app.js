@@ -6,16 +6,18 @@ require('dotenv').config();
 
 const database = require('./util/database');
 
-const userRouter = require('./routes/userRoute');
-const expenseRouter = require('./routes/expenseRoute');
-const premiumRoute = require('./routes/premiumRoute');
-const forgotPasswordRoute = require('./routes/forgotPasswordRoute');
+const userRouter = require('./routes/user');
+const expenseRouter = require('./routes/expense');
+const premiumFeatureRoute = require('./routes/premium-feature');
+const forgotPasswordRoute = require('./routes/forgot-password');
+const buyPremiumRoute = require('./routes/buy-premium');
+const downloadHistoryRoute = require('./routes/download-history')
 
-const User = require('./models/usersModel');
-const Expense = require('./models/expenseModel');
-const Order = require('./models/orderModel');
-const DownloadHistory = require('./models/downloadHistoryModel');
-const ForgotPasswordRequests = require('./models/forgotPasswordRequestsModel');
+const User = require('./models/user');
+const Expense = require('./models/expense');
+const Order = require('./models/buy-premium-order');
+const DownloadHistory = require('./models/download-history');
+const ForgotPasswordRequests = require('./models/forgot-password-request');
 
 const authenticate = require('./middlewares/authenticate');
 
@@ -26,14 +28,18 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-app.use(['/expense', '/premium'], authenticate);
+app.use(['/expense','/premium-features','/premium-buy','/download-history'], authenticate);
 app.use('/user', userRouter);
 app.use('/expense', expenseRouter);
-app.use('/premium', premiumRoute);
+app.use('/premium-features', premiumFeatureRoute);
+app.use('/premium-buy', buyPremiumRoute);
 app.use('/forgot-password', forgotPasswordRoute);
+app.use('/download-history', downloadHistoryRoute);
 
 app.use('/', (req, res, next) => {
-    res.sendFile(path.join(__dirname , 'public' + req.url))
+    const url = new URL(req.url, `http://${req.headers.host}`);
+    const urlPath = url.pathname;
+    res.sendFile(path.join(__dirname , 'public' + urlPath))
 });
 
 
