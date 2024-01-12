@@ -29,4 +29,4 @@ module.exports = database.define('users', {
         type : Sequelize.BOOLEAN,
         allowNull : false,
     }
-})
+});
