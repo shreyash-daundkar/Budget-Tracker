@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const User = require('../models/usersModel');
+const User = require('../models/user');
 
 module.exports = async (req, res, next) => {
     try {
@@ -7,7 +7,6 @@ module.exports = async (req, res, next) => {
 
         const { userId } = decryptData(token);
         req.user = await User.findByPk(userId);
-
         next();
     } catch (error) {
         console.log(error);
