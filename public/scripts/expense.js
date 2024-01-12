@@ -33,12 +33,12 @@ let isPremium = localStorage.getItem('isPremium');
 premiumBtn.addEventListener('click', goPremium);
 async function goPremium(e) {
     try {
-        const { data: {key, order} } = await axios.get(`http://${host}/premium/buy`);
+        const { data: {key, order} } = await axios.get(`http://${host}/premium-buy`);
         const options = {
             key,
             order_id: order.id,
             'handler': async res => {
-                await axios.post(`http://${host}/premium/buy`, {orderId: order.id, paymentId: res.razorpay_payment_id});
+                await axios.post(`http://${host}/premium-buy`, {orderId: order.id, paymentId: res.razorpay_payment_id});
                 alert('You are now Premium member');
                 isPremium = 'true';
                 localStorage.setItem('isPremium', 'true');
@@ -49,7 +49,7 @@ async function goPremium(e) {
         rzp.open();
         e.preventDefault();
         rzp.on('payment.failed', async res => {
-            await axios.post(`http://${host}/premium/buy`, {orderId: order.id});
+            await axios.post(`http://${host}/premium-buy`, {orderId: order.id});
             alert('Payment failed');
         })
     } catch(error) {
@@ -114,14 +114,21 @@ async function onSubmit(e) {
         }
     
         if(editId) {
-            url = `${api}/edit?expenseId=${editId}`;
+            url = `${api}?expenseId=${editId}`;
             editId = null;
-        } else url = `${api}/add`;
-    
-        const { data } = await axios.post(url, expense);
+            const { data } = await axios.put(url, expense);
         
         //if(currPage === lastPage) 
         addExpense(data);
+        } else {
+
+            url = `${api}`;
+        
+            const { data } = await axios.post(url, expense);
+            
+            //if(currPage === lastPage) 
+            addExpense(data);
+        }
         
         amount.value = '';
         des.value = '';   
@@ -150,7 +157,7 @@ async function dlt(li) {
     const id = li.getAttribute('data-id');
     try {
         li.style.display = 'none';
-        await axios.delete(`${api}/delete?expenseId=${id}`);
+        await axios.delete(`${api}?expenseId=${id}`);
     } catch (error) {
         handelErrors(error);
     }
@@ -222,7 +229,7 @@ async function loadPremiumFeatures() {
           </div>
         `
         const leaderBoardBody = document.querySelector('#leaderboard-body');
-        const { data } = await axios.get(`http://${host}/premium/features/leaderboard`);
+        const { data } = await axios.get(`http://${host}/premium-features/leaderboard`);
         const {isPremium, leaderBoard} = data;
         if(isPremium) {
             let count = 0;
