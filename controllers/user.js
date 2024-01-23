@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-const User = require('../models/user');
+const { createUser, readUsers } = require('../services/user');
 
 
 
@@ -9,11 +9,18 @@ exports.addUser = async (req, res, next) => {
     try{ 
         const user = req.body;
         user.password = await hashPassword(user.password);
+
+        const userObj = {
+            ...user, 
+            isPremium: false, 
+            expense: 0
+        }
         
-        await User.create({...user, isPremium: false, expense: 0});
-        res.json({success: true});
+        await createUser({ userObj });
+        res.json({ success: true });
+
     } catch(error) {
-        console.log(error);
+        console.log(error.stack);
 
         if (error.name === 'SequelizeUniqueConstraintError') {
             res.status(400).send('Email already in use');
@@ -36,16 +43,19 @@ function hashPassword(password) {
 exports.verifyUser = async (req, res, next) => {
     try{ 
         const {email, password} = req.body;
-        const users = await User.findAll({where: {email}});
+
+        const users = await readUsers({ email });
+
         if(users.length === 0) res.status(404).send('Email is not found');
         else {
+
             bcrypt.compare(password, users[0].password, (error, result) => {
                 if(error) res.status(400).send('Password is incorrect');
-                else if(result) res.json({success: true, token: incryptData(users[0].id), isPremium: users[0].isPremium});
+                else if(result) res.json({success: true, token: incryptData(users[0]._id.toString()), isPremium: users[0].isPremium});
             });
         }
     } catch(error) {
-        console.log(error);
+        console.log(error.stack);
         res.status(500).send('Something went wrong');
     }
 }
