@@ -1,10 +1,11 @@
-const sequelize = require('../util/database');
+const { createExpense, countExpenses, readExpenses, readExpenseById, deleteExpense, updateExpense } = require('../services/expense');
 
 
 exports.displayExpense = async (req, res, next) => {
     try {
         const currPage = parseInt(req.query.currPage);
         const limit = parseInt(req.query.limit);
+        const userId = req.user._id.toString();
 
         if (isNaN(currPage) || isNaN(limit)) {
             return res.status(400).json({ message: 'Invalid page or limit parameter' });
@@ -12,12 +13,10 @@ exports.displayExpense = async (req, res, next) => {
 
         const offset = (currPage - 1) * limit;
 
-        const count = await req.user.countExpenses();
+        const count = await countExpenses({ userId });
         const totalPages = Math.ceil(count / limit);
 
-        console.log('totalPages:', totalPages);
-
-        const expense = await req.user.getExpenses({ offset, limit });
+        const expense = await readExpenses({ userId, offset, limit });
 
         res.json({ expense, totalPages }); 
         
@@ -29,69 +28,48 @@ exports.displayExpense = async (req, res, next) => {
 
 
 exports.addExpense = async (req, res, next) => {
-    const t = await sequelize.transaction();
-
     try{
-        req.user.expense += req.body.amount;
-        await req.user.save({ transaction: t });
-        
-        const expense = await req.user.createExpense(req.body, { transaction: t });
-        await t.commit();
-        res.json(expense);
-        
-    } catch(error) {
-        await t.rollback();
+        const expenseObj = req.body;
+        const userId = req.user._id.toString();
+
+        const expense = await createExpense({ expenseObj, userId });
+        res.json(expense); 
+
+    } catch(error) {   
         handelDatabaseError(res, error);
     }
 }
 
 
 exports.deleteExpense = async (req, res, next) => {
-    const t = await sequelize.transaction();
 
     try {
-        const data = await req.user.getExpenses({
-            where: { id : req.query.expenseId },
-        });
-        if(data.length === 0) res.status(404).json({ message: 'expense not found' });
-    
-        req.user.expense -= data[0].amount;
-        await req.user.save({transaction: t});
+        const { expenseId } = req.query;
 
-        await data[0].destroy({transaction: t});
+        const expenseObj = await readExpenseById({ expenseId });
+        if(expenseObj.length === 0) res.status(404).json({ message: 'expense not found' });
 
-        await t.commit();
+        await deleteExpense({ expenseObj }); 
 
+        res.json({ success: true });
     } catch (error) {
-        await t.rollback();
         handelDatabaseError(res, error);
     }
 }
 
 
-exports.editExpense = async (req, res, next) => {
-    const t = await sequelize.transaction();
-    
+exports.editExpense = async (req, res, next) => { 
     try {
-        const data = await req.user.getExpenses({
-            where: { id : req.query.expenseId }, 
-        });
-        if(data.length === 0) return res.status(404).json({ message: 'expense not found' });
+        const { expenseId } = req.query;
+        const newExpenseObj = req.body;
 
-        req.user.expense -= data[0].amount;
-        req.user.expense += req.body.amount;
-        await req.user.save({ transaction: t });
-    
-        data[0].amount = req.body.amount;
-        data[0].category = req.body.category;
-        data[0].description = req.body.description;
-        await data[0].save({ transaction: t });
-        
-        await t.commit();
-        res.json(data[0]);
+        const expenseObj = await readExpenseById({ expenseId });
+        if(expenseObj.length === 0) res.status(404).json({ message: 'expense not found' });
+
+        const expense = await updateExpense({ expenseId, newExpenseObj });
+        res.json(expense);
 
     } catch (error) {
-        await t.rollback();
         handelDatabaseError(res, error);
     }
 }
