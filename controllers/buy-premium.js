@@ -1,5 +1,8 @@
 const Razorpay = require('razorpay');
 
+const { createOrder, updateOrder } = require('../services/buy-premium-order');
+const { updateUser } = require('../services/user');
+
 
 exports.createOrder = (req, res, next) => {
     try {
@@ -16,8 +19,16 @@ exports.createOrder = (req, res, next) => {
         razorpay.orders.create(option, async (error, order) => {
             if(error) throw error;
             try {
-                await req.user.createOrder({orderId: order.id, status: 'PENDING'});
+
+                const orderObj = { 
+                    orderId: order.id,
+                    status: 'PENDING',
+                    userId: req.user.id,
+                }
+
+                await createOrder({ orderObj });
                 res.json({order, key : razorpay.key_id});
+
             } catch (error) {
                 console.log(error);
                 res.status(500).json({message: error.message});
@@ -32,15 +43,12 @@ exports.createOrder = (req, res, next) => {
 exports.updateOrder = async (req, res, next) => {
     try {
         const {orderId, paymentId} = req.body;
+        
+        const status = paymentId ? 'SUCCESS' : 'FAILED';
+        await updateOrder({ orderId, status, paymentId });
 
-        const orders = await req.user.getOrders({where: { orderId }});
-
-        orders[0].paymentId = paymentId ? paymentId : null;
-        orders[0].status = paymentId ? 'SUCCESS' : 'FAILED';
-        orders[0].save();
-
-        req.user.isPremium = paymentId ? true : false;
-        req.user.save();
+        const isPremium = paymentId ? true : false;
+        await updateUser({ userId: req.user.id, isPremium });
 
         res.json();
     } catch (error) {
