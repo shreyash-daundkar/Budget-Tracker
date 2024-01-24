@@ -1,9 +1,8 @@
 const Sib = require('sib-api-v3-sdk');
-const { v4 } = require('uuid');
 const bcrypt = require('bcrypt');
 
-const User = require('../models/user');
-const ForgotPasswordRequests = require('../models/forgot-password-request');
+const { createForgotPasswordRequest, findForgotPasswordRequestById, deactivateForgotPasswordRequest } = require('../services/forgot-password-request');
+const { readUsers, updateUser } = require('../services/user');
 
 
 exports.sendMail = async (req, res, next) => {
@@ -22,8 +21,14 @@ exports.sendMail = async (req, res, next) => {
         }
     
         const receivers = [ { email } ];
-        const users = await User.findAll({where: {email}});
-        const { id } = await users[0].createForgotPasswordRequest({id: v4(), isActive: true});
+        const users = await readUsers({ email });
+
+        const forgotPasswordRequestObj = {
+            isActive: true,
+            userId: users[0].id, 
+        }
+
+        const id = await createForgotPasswordRequest({ forgotPasswordRequestObj });
 
         const key = await transEmailApi.sendTransacEmail({
             sender,
@@ -45,22 +50,19 @@ exports.sendMail = async (req, res, next) => {
 exports.resetPassword = async (req, res, next) => {
     try {
         const { newPassword } = req.body;
-        const id = req.query.id;
+        const forgotPasswordRequestId = req.query.id;
 
-        const requests = await ForgotPasswordRequests.findAll();
-        requests.filter(request => request.id == id ? true : false);
-        const request = requests[0];
+        const { isActive, userId } = await findForgotPasswordRequestById({ forgotPasswordRequestId });
     
-            if(request.isActive) {
-                request.isActive = false;
-                request.save();
-    
-                const user = await request.getUser();
-                user.password = await hashPassword(newPassword);
-                user.save();
+            if(isActive) {
+
+                await deactivateForgotPasswordRequest({ forgotPasswordRequestId });
+                const password = await hashPassword(newPassword);
+                await updateUser({ userId, password });
+
             } else console.log('request is close');
             
-        res.json();
+        res.json({ success: true });
 
     } catch (error) {
         console.log(error);
