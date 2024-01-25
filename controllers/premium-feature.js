@@ -1,8 +1,7 @@
-const Aws = require('aws-sdk');
-
 const { readUsers } = require('../services/user');
-
 const { storeInS3 } = require('../services/awsS3');
+const { readExpenses } = require('../services/expense');
+const { createDownloadHistory } = require('../services/download-history');
 
 
 
@@ -25,14 +24,21 @@ exports.leaderBoard = async (req, res, next) => {
 exports.downloadReport = async (req, res, next) => {
     try {
         if(!req.user.isPremium) throw {message: 'user is not premium'};
+        const userId = req.user.id;
 
-        const expense = await req.user.getExpenses();
+        const expense = await readExpenses({ userId });
         const fileData = JSON.stringify(expense);
         const fileName = 'Expense' + req.user.id + new Date().toISOString() + '.txt';
 
         const location = await storeInS3(fileName, fileData);
 
-        await req.user.createDownloadHistory({fileName, location});
+        const downloadHistoryObj = {
+            fileName, 
+            location, 
+            userId,
+        }
+
+        await createDownloadHistory({ downloadHistoryObj });
         
         res.json({ location });  
 
