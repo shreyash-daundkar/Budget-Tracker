@@ -1,19 +1,21 @@
-const Sequelize = require('sequelize');
-const database = require('../util/database');
+const { Schema, model } = require('mongoose');
 
-module.exports = database.define('downloadHistories', {
-    id : {
-        type : Sequelize.INTEGER,
-        primaryKey : true,
-        allowNull : false,
-        autoIncrement : true,
-    },
+
+const downloadHistorySchema = Schema({
     fileName : {
-        type : Sequelize.STRING,
-        allowNull : false,
+        type : String,
+        required: true
     },
     location : {
-        type : Sequelize.STRING,
-        allowNull : false,
+        type : String,
+        required: true
     },
+    userId : {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+    }
 })
+
+
+module.exports = model('DownloadHistory', downloadHistorySchema);
