@@ -1,8 +1,10 @@
+const { createDownloadHistory, readDownloadHistorys } = require('../services/download-history');
+
 exports.downloadHistory = async  (req, res, next) => {
     try {
         if(!req.user.isPremium) throw {message: 'user is not premium'};
 
-        const data = await req.user.getDownloadHistories();
+        const data = await readDownloadHistorys({ userId: req.user.id });
         res.json(data);
 
     } catch (error) {
