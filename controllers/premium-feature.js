@@ -1,6 +1,6 @@
 const Aws = require('aws-sdk');
 
-const User = require('../models/user');
+const { readUsers } = require('../services/user');
 
 const { storeInS3 } = require('../services/awsS3');
 
@@ -10,10 +10,7 @@ exports.leaderBoard = async (req, res, next) => {
     try {
         if(!req.user.isPremium) throw {message: 'user is not premium'};
 
-        const leaderBoard = await User.findAll({
-            attributes: ['username', 'expense'],
-            order: [['expense', 'DESC']],
-        });
+        const leaderBoard = await readUsers({ sortField: expense, sortDesc: true });
 
         res.json({isPremium: req.user.isPremium, leaderBoard});
 
@@ -36,8 +33,8 @@ exports.downloadReport = async (req, res, next) => {
         const location = await storeInS3(fileName, fileData);
 
         await req.user.createDownloadHistory({fileName, location});
-
-        res.json({ location });
+        
+        res.json({ location });  
 
     } catch (error) {
         console.log(error);
