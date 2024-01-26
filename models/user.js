@@ -1,4 +1,3 @@
-const { Double } = require('mongodb');
 const { Schema, model } = require('mongoose');
 
 const userSchema = Schema({
