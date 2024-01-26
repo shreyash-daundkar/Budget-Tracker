@@ -8,7 +8,7 @@ exports.createUser = async options => {
         
         const user = await new User( userObj );
 
-        user.save();
+        await user.save();
         return;
 
     } catch (error) {
@@ -19,15 +19,35 @@ exports.createUser = async options => {
 
 exports.readUsers = async options => {
     try {
-        const { email, userId } = options;
+        const { email, userId, sortField, sortDesc } = options;
 
-        const whereOption = email ? { email } : { _id: userId };
+        const whereOption = email ? { email } : userId ? { _id: userId } : {};
 
+        const sortOption = sortField ? { sortField: sortDesc ? -1 : 1 }: {};
+
+        const users = await User.find( whereOption ).sort( sortOption ).lean();
+
+        users.forEach(user => user.id = user._id.toString());
         
-        const users = await User.find(whereOption);
-        
-        console.log(whereOption, users[0])
         return users;
+    } catch (error) {
+        throw error;
+    }
+}
+
+
+exports.updateUser = async options => {
+    try {
+        const { userId, password, isPremium } = options;
+        
+        const user = await User.findById( userId );
+        
+        if ( password ) user.password = password;
+        if ( isPremium ) user.isPremium = isPremium;
+
+        await user.save();
+        return;
+        
     } catch (error) {
         throw error;
     }
