@@ -55,13 +55,10 @@ exports.readExpenses =  async options => {
     try {
         const { userId, limit, offset } = options;
 
-        let expense;
-        if(isNaN(limit) && isNaN(offset)) {
-            expense = await Expense.find({ userId }).lean();
-        } else {
-            expense = await Expense.find({ userId }).lean().skip( offset ).limit( limit );
-        }
+        const whereCondition = userId ? { userId } : {};
 
+        const expense = await Expense.find( whereCondition ).lean().skip( offset ).limit( limit );
+    
         expense.forEach(x => x.id = x._id.toString());
         
         return expense;
