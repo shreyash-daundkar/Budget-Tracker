@@ -21,12 +21,12 @@ exports.updateOrder = async options => {
     try {
         const { orderId, status, paymentId } = options;
         
-        const order = await order.findById( orderId );
+        const orders = await Order.find({ orderId });
         
-        order.status = status;
-        order.paymentId = paymentId;
+        orders[0].status = status;
+        orders[0].paymentId = paymentId;
 
-        await order.save(); 
+        await orders[0].save(); 
         return;
 
     } catch (error) {
