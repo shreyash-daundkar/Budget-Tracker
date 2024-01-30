@@ -1,12 +1,14 @@
 const jwt = require('jsonwebtoken');
-const User = require('../models/user');
+const { readUsers } = require('../services/user');
+const user = require('../models/user');
 
 module.exports = async (req, res, next) => {
     try {
         const token = req.headers['authorization'];
 
         const { userId } = decryptData(token);
-        req.user = await User.findByPk(userId);
+        const users = await readUsers({ userId });
+        req.user = users[0];
         next();
     } catch (error) {
         console.log(error);
