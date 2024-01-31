@@ -51,7 +51,7 @@ exports.verifyUser = async (req, res, next) => {
 
             bcrypt.compare(password, users[0].password, (error, result) => {
                 if(error) res.status(400).send('Password is incorrect');
-                else if(result) res.json({success: true, token: incryptData(users[0]._id.toString()), isPremium: users[0].isPremium});
+                else if(result) res.json({success: true, token: incryptData(users[0].id), isPremium: users[0].isPremium});
             });
         }
     } catch(error) {

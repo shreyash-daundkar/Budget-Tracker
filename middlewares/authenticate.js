@@ -9,6 +9,7 @@ module.exports = async (req, res, next) => {
         const { userId } = decryptData(token);
         const users = await readUsers({ userId });
         req.user = users[0];
+        
         next();
     } catch (error) {
         console.log(error);
